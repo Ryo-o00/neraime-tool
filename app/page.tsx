@@ -23,8 +23,8 @@ function adjustRange(range: string | number, plus: number): string {
     return `${base + added}+@`;
   }
 
-  if (/^(\d+)[～~](\d+)\+@$/.test(raw)) {
-    const match = raw.match(/^(\d+)[～~](\d+)\+@$/);
+  const match = raw.match(/^(\d+)[～~](\d+)\+@$/);
+  if (match) {
     const from = parseInt(match[1]);
     const to = parseInt(match[2]);
     return `${from + added}～${to + added}+@`;
