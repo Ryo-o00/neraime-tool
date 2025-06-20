@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 type RowData = {
   状態: string;
   投資区分: string;
