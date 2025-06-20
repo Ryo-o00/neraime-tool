@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 type RowData = {
   状態: string;
   投資区分: string;
-  [key: string]: any;
+  台番: string;
+  [key: `資金_${string}`]: string;
+  [key: string]: string;
 };
 
 function adjustRange(range: string | number, plus: number): string {
