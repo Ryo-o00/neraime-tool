@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+type RowData = {
+  状態: string;
+  投資区分: string;
+  [key: string]: any;
+};
+
 function adjustRange(range: string | number, plus: number): string {
   if (range === null || range === undefined || isNaN(plus)) return String(range);
   const raw = typeof range === 'number' ? range.toString() : range.toString().trim();
@@ -34,13 +40,13 @@ function adjustRange(range: string | number, plus: number): string {
 }
 
 export default function Home() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<RowData[]>([]);
   const [machine, setMachine] = useState('L吉宗');
   const [state, setState] = useState('');
   const [investment, setInvestment] = useState('');
   const [capital, setCapital] = useState('');
   const [closeGap, setCloseGap] = useState('通常');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
   const machineOptions = ['L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝激', 'ULTRAMAN', 'ギルクラ2'];
