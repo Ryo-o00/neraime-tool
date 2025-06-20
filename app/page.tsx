@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
-function adjustRange(range: string, plus: number): string {
-  if (!range || isNaN(plus)) return range;
-  const raw = range.toString().trim();
-  const added = parseInt(plus);
+function adjustRange(range: string | number, plus: number): string {
+  if (range === null || range === undefined || isNaN(plus)) return String(range);
+  const raw = typeof range === 'number' ? range.toString() : range.toString().trim();
+  const added = parseInt(plus.toString());
 
   if (/^\d+$/.test(raw)) {
     return `${parseInt(raw) + added}`;
@@ -30,7 +30,7 @@ function adjustRange(range: string, plus: number): string {
     return `${from + added}～${to + added}+@`;
   }
 
-  return range;
+  return raw;
 }
 
 export default function Home() {
