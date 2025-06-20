@@ -50,14 +50,14 @@ export default function Home() {
   const closeOptions = ['通常', '閉店3h前', '閉店2h前', '閉店1h前'];
 
   useEffect(() => {
-    const map = {
-      'L吉宗': 'yoshimune',
-      'ミリマス': 'mirimasu',
-      'Lゴジラ': 'gojira',
-      'L絶対衝激': 'zettai',
-      'ULTRAMAN': 'ultraman',
-      'ギルクラ2': 'guilty'
-    };
+    const map: { [key: string]: string } = {
+  'L吉宗': 'yoshimune',
+  'ミリマス': 'mirimasu',
+  'Lゴジラ': 'godzilla',
+  'L絶対衝激': 'zettai',
+  'ULTRAMAN': 'ultraman',
+  'ギルクラ2': 'guilty'
+};
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
       .then(json => setData(json));
