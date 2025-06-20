@@ -6,8 +6,11 @@ type RowData = {
   状態: string;
   投資区分: string;
   台番: string;
+  加算値?: string | number;
+  狙い目G数?: string;
+  調整後G数?: string;
   [key: `資金_${string}`]: string;
-  [key: string]: string;
+  [key: string]: any;
 };
 
 function adjustRange(range: string | number, plus: number): string {
