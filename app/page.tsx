@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-function adjustRange(range, plus) {
+function adjustRange(range: string, plus: number): string {
   if (!range || isNaN(plus)) return range;
   const raw = range.toString().trim();
   const added = parseInt(plus);
