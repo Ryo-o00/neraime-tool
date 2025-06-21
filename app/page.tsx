@@ -22,10 +22,10 @@ function adjustRange(range: string | number, plus: number): string {
   const raw = typeof range === 'number' ? range.toString() : range.toString().trim();
   const added = parseInt(plus.toString());
 
-  const matchPlain = raw.match(/^(CZ|AT)?間?(\d+)$/);
+  const matchPlain = raw.match(/^(CZ|AT)(間)?(\d+)$/);
   if (matchPlain) {
-    const prefix = matchPlain[1] || '';
-    const num = parseInt(matchPlain[2]);
+    const prefix = matchPlain[1];
+    const num = parseInt(matchPlain[3]);
     return `${prefix}間${num + added}`;
   }
 
@@ -65,7 +65,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長'];
+  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長', 'L緑ドン'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
@@ -84,6 +84,7 @@ export default function Home() {
       'よう実': 'youjitsu',
       'DMC5': 'dmc5',
       'いざ番長': 'izabancho',
+      'L緑ドン': 'midori'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
@@ -121,7 +122,8 @@ export default function Home() {
                      closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
                      closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
 
-        const 調整後G数 = adjustRange(baseValue, 加算);
+        const isCZorAT = /^((CZ|AT)間)?\d+$/i.test(baseValue);
+        const 調整後G数 = (closeGap === '閉店時間非考慮' || !isCZorAT) ? undefined : adjustRange(baseValue, 加算);
 
         return {
           ...item,
@@ -176,7 +178,7 @@ export default function Home() {
               {item.その他条件 && <p><strong>その他条件：</strong>{item.その他条件}</p>}
               {item.補足 && <p><strong>補足：</strong>{item.補足}</p>}
               <p className="text-red-600 font-bold">🎯 狙い目G数：{item.狙い目G数}</p>
-              {item.調整後G数 && closeGap !== '閉店時間非考慮' && (
+              {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
                 <p className="text-orange-600 font-bold">🕒 {closeGap}なら：{item.調整後G数}</p>
               )}
               {item.参考リンク && <a href={item.参考リンク} target="_blank" className="text-blue-500 underline mt-2 inline-block">🔗 詳細リンク</a>}
