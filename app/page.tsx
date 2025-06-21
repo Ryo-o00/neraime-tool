@@ -56,7 +56,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝激', 'ULTRAMAN', 'ギルクラ2'];
+  const machineOptions = ['L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
@@ -64,24 +64,24 @@ export default function Home() {
 
   useEffect(() => {
     const map: { [key: string]: string } = {
-  'L吉宗': 'yoshimune',
-  'ミリマス': 'mirimasu',
-  'Lゴジラ': 'godzilla',
-  'L絶対衝激': 'zettai',
-  'ULTRAMAN': 'ultraman',
-  'ギルクラ2': 'guilty'
-};
+      'L吉宗': 'yoshimune',
+      'ミリマス': 'mirimasu',
+      'Lゴジラ': 'godzilla',
+      'L絶対衝撃': 'zettai',
+      'ULTRAMAN': 'ultraman',
+      'ギルクラ2': 'guilty'
+    };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
       .then(json => setData(json));
   }, [machine]);
 
   const parsePlus = (value: string | number | null | undefined) => {
-  if (!value || value === '不明') return 0;
-  const cleaned = value.toString().replace(/[^\d-]/g, '');
-  const parsed = parseInt(cleaned);
-  return isNaN(parsed) ? 0 : parsed;
-};
+    if (!value || value === '不明') return 0;
+    const cleaned = value.toString().replace(/[^\d-]/g, '');
+    const parsed = parseInt(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
 
   const handleSearch = () => {
     setSearched(true);
@@ -104,8 +104,8 @@ export default function Home() {
         }
 
         const 加算 = closeGap === '閉店3h前' ? parsePlus(item['閉店3h前加算']) :
-                   closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
-                   closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
+                     closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
+                     closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
 
         const 調整後G数 = adjustRange(baseValue, 加算);
 
@@ -159,6 +159,7 @@ export default function Home() {
               {item.条件2 && <p><strong>条件2：</strong>{item.条件2}</p>}
               {item.条件3 && <p><strong>条件3：</strong>{item.条件3}</p>}
               {item.条件4 && <p><strong>条件4：</strong>{item.条件4}</p>}
+              {item.その他条件 && <p><strong>その他条件：</strong>{item.その他条件}</p>}
               <p className="text-red-600 font-bold">🎯 狙い目G数：{item.狙い目G数}</p>
               {item.調整後G数 && closeGap !== '通常' && (
                 <p className="text-orange-600 font-bold">🕒 {closeGap}なら：{item.調整後G数}</p>
