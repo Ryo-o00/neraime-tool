@@ -11,6 +11,7 @@ type RowData = {
   加算値?: string | number;
   狙い目G数?: string;
   調整後G数?: string;
+  補足?: string;
   [key: `資金_${string}`]: string;
   [key: string]: any;
 };
@@ -63,7 +64,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED'];
+  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
@@ -78,7 +79,8 @@ export default function Home() {
       'L絶対衝撃': 'zettai',
       'ULTRAMAN': 'ultraman',
       'ギルクラ2': 'guilty',
-      'ガンダムSEED': 'seed'
+      'ガンダムSEED': 'seed',
+      'よう実': 'youjitsu'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
@@ -169,6 +171,7 @@ export default function Home() {
               {item.条件3 && <p><strong>条件3：</strong>{item.条件3}</p>}
               {item.条件4 && <p><strong>条件4：</strong>{item.条件4}</p>}
               {item.その他条件 && <p><strong>その他条件：</strong>{item.その他条件}</p>}
+              {item.補足 && <p><strong>補足：</strong>{item.補足}</p>}
               <p className="text-red-600 font-bold">🎯 狙い目G数：{item.狙い目G数}</p>
               {item.調整後G数 && closeGap !== '閉店時間非考慮' && (
                 <p className="text-orange-600 font-bold">🕒 {closeGap}なら：{item.調整後G数}</p>
