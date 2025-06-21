@@ -55,21 +55,22 @@ function adjustRange(range: string | number, plus: number): string {
 
 export default function Home() {
   const [data, setData] = useState<RowData[]>([]);
-  const [machine, setMachine] = useState('L吉宗');
+  const [machine, setMachine] = useState('');
   const [state, setState] = useState('');
   const [investment, setInvestment] = useState('');
   const [capital, setCapital] = useState('');
-  const [closeGap, setCloseGap] = useState('通常');
+  const [closeGap, setCloseGap] = useState('閉店時間非考慮');
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED'];
+  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
-  const closeOptions = ['通常', '閉店3h前', '閉店2h前', '閉店1h前'];
+  const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
   useEffect(() => {
+    if (!machine || machine === '機種を選択') return;
     const map: { [key: string]: string } = {
       'L吉宗': 'yoshimune',
       'ミリマス': 'mirimasu',
@@ -102,7 +103,7 @@ export default function Home() {
                         closeGap === '閉店2h前' ? item['閉店2h前加算'] :
                         closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
 
-        if (closeGap !== '通常' && plusRaw === '不明') {
+        if (closeGap !== '閉店時間非考慮' && plusRaw === '不明') {
           return {
             ...item,
             狙い目G数: baseValue,
@@ -134,7 +135,7 @@ export default function Home() {
 
       <div className="grid gap-3 mb-4">
         <select value={machine} onChange={(e) => setMachine(e.target.value)} className="border p-2 rounded">
-          {machineOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+          {machineOptions.map((opt, idx) => <option key={idx} value={opt === '機種を選択' ? '' : opt}>{opt}</option>)}
         </select>
 
         <select value={state} onChange={(e) => setState(e.target.value)} className="border p-2 rounded">
@@ -169,7 +170,7 @@ export default function Home() {
               {item.条件4 && <p><strong>条件4：</strong>{item.条件4}</p>}
               {item.その他条件 && <p><strong>その他条件：</strong>{item.その他条件}</p>}
               <p className="text-red-600 font-bold">🎯 狙い目G数：{item.狙い目G数}</p>
-              {item.調整後G数 && closeGap !== '通常' && (
+              {item.調整後G数 && closeGap !== '閉店時間非考慮' && (
                 <p className="text-orange-600 font-bold">🕒 {closeGap}なら：{item.調整後G数}</p>
               )}
               {item.参考リンク && <a href={item.参考リンク} target="_blank" className="text-blue-500 underline mt-2 inline-block">🔗 詳細リンク</a>}
