@@ -12,6 +12,7 @@ type RowData = {
   狙い目G数?: string;
   調整後G数?: string;
   補足?: string;
+  その他条件?: string;
   [key: `資金_${string}`]: string;
   [key: string]: any;
 };
@@ -64,7 +65,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実'];
+  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
@@ -80,7 +81,8 @@ export default function Home() {
       'ULTRAMAN': 'ultraman',
       'ギルクラ2': 'guilty',
       'ガンダムSEED': 'seed',
-      'よう実': 'youjitsu'
+      'よう実': 'youjitsu',
+      'DMC5': 'dmc5'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
