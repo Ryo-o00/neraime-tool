@@ -83,7 +83,7 @@ export default function Home() {
       'ガンダムSEED': 'seed',
       'よう実': 'youjitsu',
       'DMC5': 'dmc5'
-      'いざ番長': 'izabancho'
+      'いざ番長': 'izabancho',
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
