@@ -20,6 +20,13 @@ function adjustRange(range: string | number, plus: number): string {
   const raw = typeof range === 'number' ? range.toString() : range.toString().trim();
   const added = parseInt(plus.toString());
 
+  const matchPlain = raw.match(/^(CZ|AT)?間?(\d+)$/);
+  if (matchPlain) {
+    const prefix = matchPlain[1] || '';
+    const num = parseInt(matchPlain[2]);
+    return `${prefix}間${num + added}`;
+  }
+
   if (/^\d+$/.test(raw)) {
     return `${parseInt(raw) + added}`;
   }
