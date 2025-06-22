@@ -74,7 +74,7 @@ export default function Home() {
   const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長', 'L緑ドン'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
-  const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
+  const capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
   const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
   useEffect(() => {
