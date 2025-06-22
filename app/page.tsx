@@ -71,7 +71,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長', 'L緑ドン'];
+  const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長', 'L緑ドン', 'マギレコ'];
   const stateOptions = ['リセ後', 'AT後'];
   const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
   const capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
@@ -90,7 +90,8 @@ export default function Home() {
       'よう実': 'youjitsu',
       'DMC5': 'dmc5',
       'いざ番長': 'izabancho',
-      'L緑ドン': 'midori'
+      'L緑ドン': 'midori',
+      'マギレコ': 'magireco'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
@@ -199,11 +200,9 @@ export default function Home() {
                     {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
                       <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
                     )}
-                    {item.条件 && <div className="text-xs text-gray-600">{item.条件}</div>}
-                    {item.条件2 && <div className="text-xs text-gray-600">{item.条件2}</div>}
-                    {item.条件3 && <div className="text-xs text-gray-600">{item.条件3}</div>}
-                    {item.条件4 && <div className="text-xs text-gray-600">{item.条件4}</div>}
-                    {item.その他条件 && <div className="text-xs text-gray-600">{item.その他条件}</div>}
+                    {[item.条件, item.条件2, item.条件3, item.条件4, item.その他条件].filter(Boolean).map((c, i) => (
+                      <div key={i} className="text-xs text-gray-600">{c}</div>
+                    ))}
                     {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
                   </li>
                 ))}
