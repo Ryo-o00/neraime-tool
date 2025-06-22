@@ -199,12 +199,12 @@ export default function Home() {
                     {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
                       <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
                     )}
-                    {item.補足 && <div className="text-xs text-gray-600 mt-1">{item.補足}</div>}
-                    {item.その他条件 && <div className="text-xs text-gray-600">{item.その他条件}</div>}
                     {item.条件 && <div className="text-xs text-gray-600">{item.条件}</div>}
                     {item.条件2 && <div className="text-xs text-gray-600">{item.条件2}</div>}
                     {item.条件3 && <div className="text-xs text-gray-600">{item.条件3}</div>}
                     {item.条件4 && <div className="text-xs text-gray-600">{item.条件4}</div>}
+                    {item.その他条件 && <div className="text-xs text-gray-600">{item.その他条件}</div>}
+                    {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
                   </li>
                 ))}
               </ul>
