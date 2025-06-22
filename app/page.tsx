@@ -186,16 +186,39 @@ export default function Home() {
             <div key={category} className="border rounded-xl p-4 shadow-md bg-white">
               <h2 className="font-bold text-base mb-2">{category}</h2>
               <ul className="list-disc pl-4 space-y-1">
-                {items.map((item, idx) => (
-                  <li key={idx}>
-                    <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
-                    {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
-                      <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
-                    )}
-                    {item.補足 && <div className="text-xs text-gray-600 mt-1">補足：{item.補足}</div>}
-                    {item.その他条件 && <div className="text-xs text-gray-600">条件：{item.その他条件}</div>}
-                  </li>
-                ))}
+                {items.map((item, idx) => {
+                  const hasContent =
+                    item.狙い目G数 ||
+                    item.補足 ||
+                    item.その他条件 ||
+                    item.条件 ||
+                    item.条件2 ||
+                    item.条件3 ||
+                    item.条件4 ||
+                    item.参考リンク;
+
+                  return hasContent ? (
+                    <li key={idx}>
+                      {item.狙い目G数 && (
+                        <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                      )}
+                      {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
+                        <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
+                      )}
+                      {item.補足 && <div className="text-xs text-gray-600 mt-1">補足：{item.補足}</div>}
+                      {item.その他条件 && <div className="text-xs text-gray-600">その他条件：{item.その他条件}</div>}
+                      {item.条件 && <div className="text-xs text-gray-600">条件：{item.条件}</div>}
+                      {item.条件2 && <div className="text-xs text-gray-600">条件2：{item.条件2}</div>}
+                      {item.条件3 && <div className="text-xs text-gray-600">条件3：{item.条件3}</div>}
+                      {item.条件4 && <div className="text-xs text-gray-600">条件4：{item.条件4}</div>}
+                      {item.参考リンク && (
+                        <div className="text-xs text-blue-600 underline">
+                          <a href={item.参考リンク} target="_blank" rel="noopener noreferrer">参考リンク</a>
+                        </div>
+                      )}
+                    </li>
+                  ) : null;
+                })}
               </ul>
             </div>
           ))}
