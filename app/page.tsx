@@ -58,6 +58,12 @@ function adjustRange(range: string | number, plus: number): string {
     return `${from + added}～${to + added}+@`;
   }
 
+  const matchPt = raw.match(/^(\d+)pt$/);
+  if (matchPt) {
+    const base = parseInt(matchPt[1]);
+    return `${base + added}pt`;
+  }
+
   return raw;
 }
 
@@ -129,8 +135,7 @@ export default function Home() {
                      closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
                      closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
 
-        const isCZorAT = /^((CZ|AT)間)?\d+$/i.test(baseValue);
-        const 調整後G数 = (closeGap === '閉店時間非考慮' || !isCZorAT) ? undefined : adjustRange(baseValue, 加算);
+        const 調整後G数 = (closeGap === '閉店時間非考慮') ? undefined : adjustRange(baseValue, 加算);
 
         return {
           ...item,
