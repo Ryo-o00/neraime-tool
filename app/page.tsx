@@ -13,6 +13,12 @@ type RowData = {
   調整後G数?: string;
   補足?: string;
   その他条件?: string;
+  狙い分類?: string;
+  条件?: string;
+  条件2?: string;
+  条件3?: string;
+  条件4?: string;
+  参考リンク?: string;
   [key: `資金_${string}`]: string;
   [key: string]: any;
 };
@@ -67,7 +73,7 @@ export default function Home() {
 
   const machineOptions = ['機種を選択', 'L吉宗', 'ミリマス', 'Lゴジラ', 'L絶対衝撃', 'ULTRAMAN', 'ギルクラ2', 'ガンダムSEED', 'よう実', 'DMC5', 'いざ番長', 'L緑ドン'];
   const stateOptions = ['リセ後', 'AT後'];
-  const investmentOptions = ['再プレイ', '46/52/460枚', '46/52現金'];
+  const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
   const capitalOptions = ['30万円以下', '50万円前後', '100万円以上'];
   const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
@@ -101,7 +107,7 @@ export default function Home() {
   const handleSearch = () => {
     setSearched(true);
     const filtered = data
-      .filter(item => item.状態?.includes(state) && item.投資区分 === investment)
+      .filter(item => item.状態?.includes(state) && item.投資区分.replace('46/52', '46-52') === investment)
       .map(item => {
         const baseValue = item[`資金_${capital}`]?.toString().trim().replace(/[\s　]/g, '');
 
@@ -136,6 +142,13 @@ export default function Home() {
     setResults(filtered);
   };
 
+  const groupedResults = results.reduce<{ [key: string]: RowData[] }>((acc, item) => {
+    const category = item.狙い分類 || 'その他';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(item);
+    return acc;
+  }, {});
+
   return (
     <main className="p-4 max-w-xl mx-auto text-sm">
       <h1 className="text-xl font-bold mb-4 text-center">狙い目早見表</h1>
@@ -167,21 +180,23 @@ export default function Home() {
         <button onClick={handleSearch} className="bg-blue-600 text-white py-2 rounded" disabled={!state || !investment || !capital}>検索</button>
       </div>
 
-      {searched && results.length > 0 ? (
-        <div className="grid gap-4">
-          {results.map((item, idx) => (
-            <div key={idx} className="border rounded-xl p-4 shadow-md bg-white">
-              {item.条件 && <p><strong>条件：</strong>{item.条件}</p>}
-              {item.条件2 && <p><strong>条件2：</strong>{item.条件2}</p>}
-              {item.条件3 && <p><strong>条件3：</strong>{item.条件3}</p>}
-              {item.条件4 && <p><strong>条件4：</strong>{item.条件4}</p>}
-              {item.その他条件 && <p><strong>その他条件：</strong>{item.その他条件}</p>}
-              {item.補足 && <p><strong>補足：</strong>{item.補足}</p>}
-              <p className="text-red-600 font-bold">🎯 狙い目G数：{item.狙い目G数}</p>
-              {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
-                <p className="text-orange-600 font-bold">🕒 {closeGap}なら：{item.調整後G数}</p>
-              )}
-              {item.参考リンク && <a href={item.参考リンク} target="_blank" className="text-blue-500 underline mt-2 inline-block">🔗 詳細リンク</a>}
+      {searched && Object.keys(groupedResults).length > 0 ? (
+        <div className="grid gap-6">
+          {Object.entries(groupedResults).map(([category, items]) => (
+            <div key={category} className="border rounded-xl p-4 shadow-md bg-white">
+              <h2 className="font-bold text-base mb-2">{category}</h2>
+              <ul className="list-disc pl-4 space-y-1">
+                {items.map((item, idx) => (
+                  <li key={idx}>
+                    <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                    {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
+                      <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
+                    )}
+                    {item.補足 && <div className="text-xs text-gray-600 mt-1">補足：{item.補足}</div>}
+                    {item.その他条件 && <div className="text-xs text-gray-600">条件：{item.その他条件}</div>}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
