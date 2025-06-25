@@ -15,6 +15,7 @@ type RowData = {
   その他条件?: string;
   狙い分類?: string;
   中カテゴリ?: string;
+  小カテゴリ?: string;
   条件?: string;
   条件2?: string;
   条件3?: string;
@@ -175,19 +176,22 @@ export default function Home() {
 
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
-    const minorSource = item.中カテゴリ || item.条件4 || item.条件3 || '';
+
+    const minorSource = item.中カテゴリ || item.条件4 || item.条件3 || item.条件 || '';
     let minor = '';
-    if (minorSource.includes('pt')) {
-      minor = minorSource;
-    } else if (minorSource.includes('スルー')) {
-      minor = minorSource;
-    } else if (minorSource.includes('前回AT300枚以下')) {
+
+    if (minorSource.includes('前回AT300枚以下')) {
       minor = '前回AT300枚以下';
     } else if (minorSource.includes('前回AT600枚以上')) {
       minor = '前回AT600枚以上';
     } else if (minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')) {
       minor = '前回AT300枚以上';
+    } else if (/スルー/.test(minorSource)) {
+      minor = minorSource;
+    } else if (/pt/.test(minorSource)) {
+      minor = minorSource;
     }
+
     if (!acc[major]) acc[major] = {};
     const mid = minor || '全体';
     if (!acc[major][mid]) acc[major][mid] = [];
