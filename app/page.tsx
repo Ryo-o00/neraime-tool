@@ -148,43 +148,39 @@ export default function Home() {
     .filter(item =>
       item.状態?.includes(state) &&
       item.投資区分.replace('46/52', '46-52') === investment
-    )    
-    
-    setSearched(true);
-    const filtered = data
-      .filter(item => item.状態?.includes(state) && item.投資区分.replace('46/52', '46-52') === investment)
-      .map(item => {
-        const baseValue = item[`資金_${capital}`]?.toString().trim().replace(/[\s　]/g, '');
-        const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
-                        closeGap === '閉店2h前' ? item['閉店2h前加算'] :
-                        closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
+    )
+    .map(item => {
+      const baseValue = item[`資金_${capital}`]?.toString().trim().replace(/[\s　]/g, '');
+      const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
+                      closeGap === '閉店2h前' ? item['閉店2h前加算'] :
+                      closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
 
-        if (closeGap !== '閉店時間非考慮' && plusRaw === '不明') {
-          return {
-            ...item,
-            狙い目G数: baseValue,
-            調整後G数: '不明',
-            加算値: '不明'
-          };
-        }
-
-        const 加算 = closeGap === '閉店3h前' ? parsePlus(item['閉店3h前加算']) :
-                     closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
-                     closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
-
-        const isAdjustable = /^((CZ|AT)間)?\d+(pt)?$/i.test(baseValue);
-        const 調整後G数 = (closeGap === '閉店時間非考慮' || !isAdjustable) ? undefined : adjustRange(baseValue, 加算);
-
+      if (closeGap !== '閉店時間非考慮' && plusRaw === '不明') {
         return {
           ...item,
           狙い目G数: baseValue,
-          調整後G数,
-          加算値: 加算
+          調整後G数: '不明',
+          加算値: '不明'
         };
-      });
+      }
 
-    setResults(filtered);
-  };
+      const 加算 = closeGap === '閉店3h前' ? parsePlus(item['閉店3h前加算']) :
+                   closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
+                   closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
+
+      const isAdjustable = /^((CZ|AT)間)?\d+(pt)?$/i.test(baseValue);
+      const 調整後G数 = (closeGap === '閉店時間非考慮' || !isAdjustable) ? undefined : adjustRange(baseValue, 加算);
+
+      return {
+        ...item,
+        狙い目G数: baseValue,
+        調整後G数,
+        加算値: 加算
+      };
+    });
+
+  setResults(filtered);
+};
 
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
