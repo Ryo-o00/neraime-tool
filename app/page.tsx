@@ -14,6 +14,7 @@ type RowData = {
   補足?: string;
   その他条件?: string;
   狙い分類?: string;
+  中カテゴリ?: string;
   条件?: string;
   条件2?: string;
   条件3?: string;
@@ -56,12 +57,6 @@ function adjustRange(range: string | number, plus: number): string {
     const from = parseInt(match[1]);
     const to = parseInt(match[2]);
     return `${from + added}～${to + added}+@`;
-  }
-
-  const matchPt = raw.match(/^(\d+)pt$/);
-  if (matchPt) {
-    const base = parseInt(matchPt[1]);
-    return `${base + added}pt`;
   }
 
   return raw;
@@ -117,7 +112,6 @@ export default function Home() {
       .filter(item => item.状態?.includes(state) && item.投資区分.replace('46/52', '46-52') === investment)
       .map(item => {
         const baseValue = item[`資金_${capital}`]?.toString().trim().replace(/[\s　]/g, '');
-
         const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
                         closeGap === '閉店2h前' ? item['閉店2h前加算'] :
                         closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
@@ -135,7 +129,8 @@ export default function Home() {
                      closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
                      closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
 
-        const 調整後G数 = (closeGap === '閉店時間非考慮') ? undefined : adjustRange(baseValue, 加算);
+        const isCZorAT = /^((CZ|AT)間)?\d+$/i.test(baseValue);
+        const 調整後G数 = (closeGap === '閉店時間非考慮' || !isCZorAT) ? undefined : adjustRange(baseValue, 加算);
 
         return {
           ...item,
@@ -148,10 +143,15 @@ export default function Home() {
     setResults(filtered);
   };
 
-  const groupedResults = results.reduce<{ [key: string]: RowData[] }>((acc, item) => {
-    const category = item.狙い分類 || 'その他';
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(item);
+  const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
+    const major = item.狙い分類 || 'その他';
+    const minorRaw = item.条件4 || '';
+    const minor = /前回AT300枚以下/.test(minorRaw) ? '前回AT300枚以下' :
+                  /前回AT(300枚以上|300～600枚)/.test(minorRaw) ? '前回AT300枚以上' : '';
+    if (!acc[major]) acc[major] = {};
+    const mid = minor || '全体';
+    if (!acc[major][mid]) acc[major][mid] = [];
+    acc[major][mid].push(item);
     return acc;
   }, {});
 
@@ -188,30 +188,35 @@ export default function Home() {
 
       {searched && Object.keys(groupedResults).length > 0 ? (
         <div className="grid gap-6">
-          {Object.entries(groupedResults).map(([category, items]) => (
+          {Object.entries(groupedResults).map(([category, minors]) => (
             <div key={category} className="border rounded-xl p-4 shadow-md bg-white">
               <h2 className="font-bold text-base mb-2">{category}</h2>
-              {items[0]?.参考リンク && (
-                <div className="text-xs text-blue-600 underline mb-1">
-                  <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>
-                </div>
-              )}
-              <ul className="list-disc pl-4 space-y-1">
-                {items.map((item, idx) => (
-                  <li key={idx}>
-                    {item.狙い目G数 && (
-                      <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
-                    )}
-                    {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
-                      <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
-                    )}
-                    {[item.条件, item.条件2, item.条件3, item.条件4, item.その他条件].filter(Boolean).map((c, i) => (
-                      <div key={i} className="text-xs text-gray-600">{c}</div>
+              {Object.entries(minors).map(([minor, items]) => (
+                <div key={minor} className="mb-3">
+                  {minor !== '全体' && <h3 className="text-sm font-semibold mb-1">{minor}</h3>}
+                  {items[0]?.参考リンク && (
+                    <div className="text-xs text-blue-600 underline mb-1">
+                      <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>
+                    </div>
+                  )}
+                  <ul className="list-disc pl-4 space-y-1">
+                    {items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.狙い目G数 && (
+                          <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                        )}
+                        {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
+                          <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
+                        )}
+                        {[item.条件, item.条件2, item.条件3].filter(Boolean).map((c, i) => (
+                          <div key={i} className="text-xs text-gray-600">{c}</div>
+                        ))}
+                        {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
+                      </li>
                     ))}
-                    {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
-                  </li>
-                ))}
-              </ul>
+                  </ul>
+                </div>
+              ))}
             </div>
           ))}
         </div>
