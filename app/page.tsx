@@ -77,15 +77,15 @@ function adjustRange(range: string | number, plus: number): string {
 
 export default function Home() {
   const [data, setData] = useState<RowData[]>([]);
-  const [machine, setMachine] = useState('');
-  const [state, setState] = useState('');
-  const [investment, setInvestment] = useState('');
-  const [capital, setCapital] = useState('');
-  const [closeGap, setCloseGap] = useState('閉店時間非考慮');
+  const [_machine, _setMachine] = useState('');
+  const [_state, _setState] = useState('');
+  const [_investment, _setInvestment] = useState('');
+  const [_capital, _setCapital] = useState('');
+  const [_closeGap, _setCloseGap] = useState('閉店時間非考慮');
   const [results, setResults] = useState<RowData[]>([]);
-  const [searched, setSearched] = useState(false);
+  const [_searched, _setSearched] = useState(false);
 
-  const machineOptions = [
+  const _machineOptions = [
     '機種を選択',
     'L吉宗',
     'ミリマス',
@@ -102,13 +102,13 @@ export default function Home() {
     '東京喰種'
   ];
 
-  const stateOptions = ['リセ後', 'AT後'];
-  const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
-  const capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
-  const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
+  const _stateOptions = ['リセ後', 'AT後'];
+  const _investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
+  const _capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
+  const _closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
   useEffect(() => {
-    if (!machine || machine === '機種を選択') return;
+    if (!_machine || _machine === '機種を選択') return;
     const map: { [key: string]: string } = {
       'L吉宗': 'yoshimune',
       'ミリマス': 'mirimasu',
@@ -124,10 +124,10 @@ export default function Home() {
       'マギレコ': 'magireco',
       '東京喰種': 'tokyoghoul'
     };
-    fetch(`/neraime_l_${map[machine]}.json`)
+    fetch(`/neraime_l_${map[_machine]}.json`)
       .then(res => res.json())
       .then(json => setData(json));
-  }, [machine]);
+  }, [_machine]);
 
   const parsePlus = (value: string | number | null | undefined) => {
     if (!value || value === '不明') return 0;
@@ -176,7 +176,7 @@ export default function Home() {
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
 
-    if (machine === '東京喰種') {
+    if (_machine === '東京喰種') {
       const pt = item.中カテゴリ || item.条件4 || 'pt不明';
       const sur = item.条件 || 'スルー不明';
       if (!acc[pt]) acc[pt] = {};
@@ -202,5 +202,4 @@ export default function Home() {
   }, {});
 
   return (<div>{/* UI部分は後ほど実装 */}</div>);
-
 }
