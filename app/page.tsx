@@ -252,7 +252,7 @@ export default function Home() {
                         {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
                           <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
                         )}
-                        {[item.条件, item.条件2, item.条件3].filter(Boolean).map((c, i) => (
+                        {[item.条件, item.条件2, item.条件3, item.条件4].filter(Boolean).map((c, i) => (
                           <div key={i} className="text-xs text-gray-600">{c}</div>
                         ))}
                         {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
