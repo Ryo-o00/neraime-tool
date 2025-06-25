@@ -24,8 +24,6 @@ type RowData = {
   [key: string]: any;
 };
 
-// --- ヘルパー関数 ---------------------------------------------
-
 function adjustRange(range: string | number, plus: number): string {
   if (range === null || range === undefined || isNaN(plus)) return String(range);
   const raw = typeof range === 'number' ? range.toString() : range.toString().trim();
@@ -61,7 +59,7 @@ function adjustRange(range: string | number, plus: number): string {
     return `${from + added}～${to + added}+@`;
   }
 
-  return raw; // 変換対象外
+  return raw;
 }
 
 const machineOptions = [
@@ -94,7 +92,6 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
-  // 機種 → ファイル名マッピング
   useEffect(() => {
     if (!machine || machine === '機種を選択') return;
     const map: Record<string, string> = {
@@ -114,7 +111,6 @@ export default function Home() {
     fetch(`/neraime_l_${map[machine]}.json`).then((res) => res.json()).then(setData);
   }, [machine]);
 
-  // 'NaN'・'不明' などを数値化
   const parsePlus = (value: string | number | null | undefined) => {
     if (!value || value === '不明') return 0;
     const cleaned = value.toString().replace(/[^\d-]/g, '');
@@ -139,7 +135,6 @@ export default function Home() {
             ? item['閉店1h前加算']
             : null;
 
-        // "不明" の場合はそのまま返却
         if (closeGap !== '閉店時間非考慮' && plusRaw === '不明') {
           return { ...item, 狙い目G数: base, 調整後G数: '不明', 加算値: '不明' };
         }
@@ -159,10 +154,18 @@ export default function Home() {
         return { ...item, 狙い目G数: base, 調整後G数: adjusted, 加算値: 加算 };
       });
 
-    setResults(filtered);
+    const insertIndex = filtered.findIndex(item => item.条件 === '0スルー' && parsePlus(item[`資金_${capital}`]) >= 450);
+    const insertData = filtered.find(item => parsePlus(item[`資金_${capital}`]) === 540);
+
+    if (insertIndex !== -1 && insertData) {
+      const filteredWithout540 = filtered.filter(item => parsePlus(item[`資金_${capital}`]) !== 540);
+      filteredWithout540.splice(insertIndex, 0, insertData);
+      setResults(filteredWithout540);
+    } else {
+      setResults(filtered);
+    }
   };
 
-  // --- グルーピング：中カテゴリを優先し、なければ条件4で判定 ---------
   const groupedResults = results.reduce<Record<string, Record<string, RowData[]>>>((acc, item) => {
     const major = item.狙い分類 || 'その他';
     const minorSource = item.中カテゴリ || item.条件4 || '';
@@ -178,101 +181,32 @@ export default function Home() {
     return acc;
   }, {});
 
-  // --- JSX -----------------------------------------------------
   return (
     <main className="p-4 max-w-xl mx-auto text-sm">
       <h1 className="text-xl font-bold mb-4 text-center">狙い目早見表</h1>
 
-      {/* --- フォーム --- */}
       <div className="grid gap-3 mb-4">
         <select value={machine} onChange={(e) => setMachine(e.target.value)} className="border p-2 rounded">
           {machineOptions.map((opt) => (
-            <option key={opt} value={opt === '機種を選択' ? '' : opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt === '機種を選択' ? '' : opt}>{opt}</option>
           ))}
         </select>
         <select value={state} onChange={(e) => setState(e.target.value)} className="border p-2 rounded">
           <option value="">状態を選択</option>
           {stateOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
         <select value={investment} onChange={(e) => setInvestment(e.target.value)} className="border p-2 rounded">
           <option value="">投資区分を選択</option>
           {investmentOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
         <select value={capital} onChange={(e) => setCapital(e.target.value)} className="border p-2 rounded">
           <option value="">資金帯を選択</option>
           {capitalOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
-        <select value={closeGap} onChange={(e) => setCloseGap(e.target.value)} className="border p-2 rounded">
-          {closeOptions.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={handleSearch}
-          className="bg-blue-600 text-white py-2 rounded disabled:opacity-40"
-          disabled={!state || !investment || !capital}
-        >
-          検索
-        </button>
-      </div>
-
-      {/* --- 検索結果 --- */}
-      {searched && Object.keys(groupedResults).length === 0 && (
-        <p className="text-center text-sm text-gray-500">条件に合うデータが見つかりません。</p>
-      )}
-
-      {Object.entries(groupedResults).map(([category, minors]) => (
-        <section key={category} className="border rounded-xl p-4 shadow-md bg-white mb-6">
-          <h2 className="font-bold text-base mb-2">{category}</h2>
-          {Object.entries(minors).map(([minor, items]) => (
-            <div key={minor} className="mb-4">
-              {minor !== '全体' && <h3 className="text-sm font-semibold mb-1">{minor}</h3>}
-
-              {/* 参考リンクはグループにつき1回だけ表示 */}
-              {items[0]?.参考リンク && (
-                <div className="text-xs text-blue-600 underline mb-1">
-                  <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">
-                    打ち方や各種示唆はこちら
-                  </a>
-                </div>
-              )}
-
-              <ul className="list-disc pl-4 space-y-1">
-                {items.map((item, idx) => (
-                  <li key={idx}>
-                    {item.狙い目G数 && <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>}
-                    {item.調整後G数 && closeGap !== '閉店時間非考慮' && (
-                      <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
-                    )}
-                    {[item.条件, item.条件2, item.条件3]
-                      .filter(Boolean)
-                      .map((c, i) => (
-                        <div key={i} className="text-xs text-gray-600">{c}</div>
-                      ))}
-                    {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </section>
-      ))}
-    </main>
-  );
-}
+        <select value={closeGap} onChange={(e
