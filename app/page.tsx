@@ -138,8 +138,6 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-
-const handleSearch = () => {
   console.log('検索条件', { state, investment, capital, closeGap, machine });
   console.log('データ件数', data.length);
   console.log('データサンプル', data[0]);
