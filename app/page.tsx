@@ -76,14 +76,13 @@ function adjustRange(range: string | number, plus: number): string {
 }
 
 export default function Home() {
-  const [data, setData] = useState<RowData[]>([]);
-  const [_machine, _setMachine] = useState('');
-  const [_state, _setState] = useState('');
-  const [_investment, _setInvestment] = useState('');
-  const [_capital, _setCapital] = useState('');
-  const [_closeGap, _setCloseGap] = useState('閉店時間非考慮');
+  const [_machine] = useState('');
+  const [_state] = useState('');
+  const [_investment] = useState('');
+  const [_capital] = useState('');
+  const [_closeGap] = useState('閉店時間非考慮');
   const [results, setResults] = useState<RowData[]>([]);
-  const [_searched, _setSearched] = useState(false);
+  const [_searched] = useState(false);
 
   const _machineOptions = [
     '機種を選択',
