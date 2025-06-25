@@ -90,7 +90,6 @@ export default function Home() {
   const [capital, setCapital] = useState('');
   const [closeGap, setCloseGap] = useState('閉店時間非考慮');
   const [results, setResults] = useState<RowData[]>([]);
-  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
     if (!machine || machine === '機種を選択') return;
@@ -119,8 +118,6 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-    setSearched(true);
-
     const filtered = data
       .filter((item) => item.状態?.includes(state) && item.投資区分.replace('46/52', '46-52') === investment)
       .map((item) => {
@@ -213,6 +210,7 @@ export default function Home() {
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
+        <button onClick={handleSearch} className="bg-blue-500 text-white px-4 py-2 rounded">検索</button>
       </div>
     </main>
   );
