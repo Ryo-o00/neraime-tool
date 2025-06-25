@@ -179,10 +179,10 @@ export default function Home() {
     let minor = '';
     if (minorSource.includes('前回AT300枚以下')) {
       minor = '前回AT300枚以下';
-    } else if (minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')) {
-      minor = '前回AT300枚以上';
     } else if (minorSource.includes('前回AT600枚以上')) {
       minor = '前回AT600枚以上';
+    } else if (minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')) {
+      minor = '前回AT300枚以上';
     }
     if (!acc[major]) acc[major] = {};
     const mid = minor || '全体';
@@ -191,5 +191,9 @@ export default function Home() {
     return acc;
   }, {});
 
-  return (/* unchanged UI part */);
+  return (
+    <main className="p-4 max-w-xl mx-auto text-sm">
+      {/* 必要に応じて UI をここに追加 */}
+    </main>
+  );
 }
