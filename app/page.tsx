@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type RowData = {
   状態: string;
   投資区分: string;
@@ -161,21 +162,6 @@ export default function Home() {
 
     setResults(filteredWithout540);
   };
-
-  const groupedResults = results.reduce<Record<string, Record<string, RowData[]>>>((acc, item) => {
-    const major = item.狙い分類 || 'その他';
-    const minorSource = item.中カテゴリ || item.条件4 || '';
-    const minor = minorSource.includes('前回AT300枚以下')
-      ? '前回AT300枚以下'
-      : minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')
-      ? '前回AT300枚以上'
-      : '全体';
-
-    acc[major] ||= {};
-    acc[major][minor] ||= [];
-    acc[major][minor].push(item);
-    return acc;
-  }, {});
 
   return (
     <main className="p-4 max-w-xl mx-auto text-sm">
