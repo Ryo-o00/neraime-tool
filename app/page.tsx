@@ -76,15 +76,16 @@ function adjustRange(range: string | number, plus: number): string {
 }
 
 export default function Home() {
-  const [_machine] = useState('');
-  const [_state] = useState('');
-  const [_investment] = useState('');
-  const [_capital] = useState('');
-  const [_closeGap] = useState('閉店時間非考慮');
+  const [data, setData] = useState<RowData[]>([]);
+  const [machine, setMachine] = useState('');
+  const [state, setState] = useState('');
+  const [investment, setInvestment] = useState('');
+  const [capital, setCapital] = useState('');
+  const [closeGap, setCloseGap] = useState('閉店時間非考慮');
   const [results, setResults] = useState<RowData[]>([]);
-  const [_searched] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  const _machineOptions = [
+  const machineOptions = [
     '機種を選択',
     'L吉宗',
     'ミリマス',
@@ -101,13 +102,13 @@ export default function Home() {
     '東京喰種'
   ];
 
-  const _stateOptions = ['リセ後', 'AT後'];
-  const _investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
-  const _capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
-  const _closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
+  const stateOptions = ['リセ後', 'AT後'];
+  const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
+  const capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
+  const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
   useEffect(() => {
-    if (!_machine || _machine === '機種を選択') return;
+    if (!machine || machine === '機種を選択') return;
     const map: { [key: string]: string } = {
       'L吉宗': 'yoshimune',
       'ミリマス': 'mirimasu',
@@ -123,10 +124,10 @@ export default function Home() {
       'マギレコ': 'magireco',
       '東京喰種': 'tokyoghoul'
     };
-    fetch(`/neraime_l_${map[_machine]}.json`)
+    fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
       .then(json => setData(json));
-  }, [_machine]);
+  }, [machine]);
 
   const parsePlus = (value: string | number | null | undefined) => {
     if (!value || value === '不明') return 0;
@@ -174,16 +175,6 @@ export default function Home() {
 
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
-
-    if (_machine === '東京喰種') {
-      const pt = item.中カテゴリ || item.条件4 || 'pt不明';
-      const sur = item.条件 || 'スルー不明';
-      if (!acc[pt]) acc[pt] = {};
-      if (!acc[pt][sur]) acc[pt][sur] = [];
-      acc[pt][sur].push(item);
-      return acc;
-    }
-
     const minorSource = item.中カテゴリ || item.条件4 || '';
     let minor = '';
     if (minorSource.includes('前回AT300枚以下')) {
@@ -200,5 +191,74 @@ export default function Home() {
     return acc;
   }, {});
 
-  return (<div>{/* UI部分は後ほど実装 */}</div>);
+  return (
+    <main className="p-4 max-w-xl mx-auto text-sm">
+      <h1 className="text-xl font-bold mb-4 text-center">狙い目早見表</h1>
+
+      <div className="grid gap-3 mb-4">
+        <select value={machine} onChange={(e) => setMachine(e.target.value)} className="border p-2 rounded">
+          {machineOptions.map((opt, idx) => <option key={idx} value={opt === '機種を選択' ? '' : opt}>{opt}</option>)}
+        </select>
+
+        <select value={state} onChange={(e) => setState(e.target.value)} className="border p-2 rounded">
+          <option value="">状態を選択</option>
+          {stateOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={investment} onChange={(e) => setInvestment(e.target.value)} className="border p-2 rounded">
+          <option value="">投資区分を選択</option>
+          {investmentOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={capital} onChange={(e) => setCapital(e.target.value)} className="border p-2 rounded">
+          <option value="">資金帯を選択</option>
+          {capitalOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={closeGap} onChange={(e) => setCloseGap(e.target.value)} className="border p-2 rounded">
+          {closeOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <button onClick={handleSearch} className="bg-blue-600 text-white py-2 rounded" disabled={!state || !investment || !capital}>検索</button>
+      </div>
+
+      {searched && Object.keys(groupedResults).length > 0 ? (
+        <div className="grid gap-6">
+          {Object.entries(groupedResults).map(([category, minors]) => (
+            <div key={category} className="border rounded-xl p-4 shadow-md bg-white">
+              <h2 className="font-bold text-base mb-2">{category}</h2>
+              {Object.entries(minors).map(([minor, items]) => (
+                <div key={minor} className="mb-3">
+                  {minor !== '全体' && <h3 className="text-sm font-semibold mb-1">{minor}</h3>}
+                  {items[0]?.参考リンク && (
+                    <div className="text-xs text-blue-600 underline mb-1">
+                      <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>
+                    </div>
+                  )}
+                  <ul className="list-disc pl-4 space-y-1">
+                    {items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.狙い目G数 && (
+                          <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                        )}
+                        {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
+                          <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
+                        )}
+                        {[item.条件, item.条件2, item.条件3].filter(Boolean).map((c, i) => (
+                          <div key={i} className="text-xs text-gray-600">{c}</div>
+                        ))}
+                        {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : searched ? (
+        <p className="text-center text-sm text-gray-500">条件に合うデータが見つかりません。</p>
+      ) : null}
+    </main>
+  );
 }
