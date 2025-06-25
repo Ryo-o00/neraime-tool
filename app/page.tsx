@@ -154,16 +154,15 @@ export default function Home() {
         return { ...item, 狙い目G数: base, 調整後G数: adjusted, 加算値: 加算 };
       });
 
-    const insertIndex = filtered.findIndex(item => item.条件 === '0スルー' && parsePlus(item[`資金_${capital}`]) >= 450);
+    const filteredWithout540 = filtered.filter(item => parsePlus(item[`資金_${capital}`]) !== 540);
+    const insertIndex = filteredWithout540.findIndex(item => item.条件 === '0スルー' && parsePlus(item[`資金_${capital}`]) >= 450);
     const insertData = filtered.find(item => parsePlus(item[`資金_${capital}`]) === 540);
 
     if (insertIndex !== -1 && insertData) {
-      const filteredWithout540 = filtered.filter(item => parsePlus(item[`資金_${capital}`]) !== 540);
       filteredWithout540.splice(insertIndex, 0, insertData);
-      setResults(filteredWithout540);
-    } else {
-      setResults(filtered);
     }
+
+    setResults(filteredWithout540);
   };
 
   const groupedResults = results.reduce<Record<string, Record<string, RowData[]>>>((acc, item) => {
@@ -209,4 +208,12 @@ export default function Home() {
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
-        <select value={closeGap} onChange={(e
+        <select value={closeGap} onChange={(e) => setCloseGap(e.target.value)} className="border p-2 rounded">
+          {closeOptions.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      </div>
+    </main>
+  );
+}
