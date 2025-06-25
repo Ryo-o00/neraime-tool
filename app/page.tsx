@@ -149,4 +149,5 @@ export default function Home() {
     setResults(filtered as RowData[]);
   };
 
-  // 以下省略（UI 部分は変更なし）
+  return <main className="p-4"> {/* Placeholder UI */} </main>;
+}
