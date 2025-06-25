@@ -130,12 +130,12 @@ export default function Home() {
       .then(json => setData(json));
   }, [machine]);
 
-  const parsePlus = (value: string | number | null | undefined) => {
-    if (!value || value === '不明') return 0;
-    const cleaned = value.toString().replace(/[^\d-]/g, '');
-    const parsed = parseInt(cleaned);
-    return isNaN(parsed) ? 0 : parsed;
-  };
+const parsePlus = (value: string | number | null | undefined) => {
+  if (!value || value === '不明') return 0;
+  const cleaned = value.toString().replace(/[^\d-]/g, '');
+  const parsed = parseInt(cleaned, 10);
+  return isNaN(parsed) ? 0 : parsed;
+};
 
   const handleSearch = () => {
   console.log('検索条件', { state, investment, capital, closeGap, machine });
