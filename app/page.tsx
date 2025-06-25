@@ -175,9 +175,13 @@ export default function Home() {
 
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
-    const minorSource = item.中カテゴリ || item.条件4 || '';
+    const minorSource = item.中カテゴリ || item.条件4 || item.条件3 || '';
     let minor = '';
-    if (minorSource.includes('前回AT300枚以下')) {
+    if (minorSource.includes('pt')) {
+      minor = minorSource;
+    } else if (minorSource.includes('スルー')) {
+      minor = minorSource;
+    } else if (minorSource.includes('前回AT300枚以下')) {
       minor = '前回AT300枚以下';
     } else if (minorSource.includes('前回AT600枚以上')) {
       minor = '前回AT600枚以上';
