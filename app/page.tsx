@@ -201,5 +201,6 @@ export default function Home() {
     return acc;
   }, {});
 
-  return (/* unchanged UI part */);
+  return (<div>{/* UI部分は後ほど実装 */}</div>);
+
 }
