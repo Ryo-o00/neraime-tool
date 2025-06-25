@@ -193,7 +193,72 @@ export default function Home() {
 
   return (
     <main className="p-4 max-w-xl mx-auto text-sm">
-      {/* 必要に応じて UI をここに追加 */}
+      <h1 className="text-xl font-bold mb-4 text-center">狙い目早見表</h1>
+
+      <div className="grid gap-3 mb-4">
+        <select value={machine} onChange={(e) => setMachine(e.target.value)} className="border p-2 rounded">
+          {machineOptions.map((opt, idx) => <option key={idx} value={opt === '機種を選択' ? '' : opt}>{opt}</option>)}
+        </select>
+
+        <select value={state} onChange={(e) => setState(e.target.value)} className="border p-2 rounded">
+          <option value="">状態を選択</option>
+          {stateOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={investment} onChange={(e) => setInvestment(e.target.value)} className="border p-2 rounded">
+          <option value="">投資区分を選択</option>
+          {investmentOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={capital} onChange={(e) => setCapital(e.target.value)} className="border p-2 rounded">
+          <option value="">資金帯を選択</option>
+          {capitalOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <select value={closeGap} onChange={(e) => setCloseGap(e.target.value)} className="border p-2 rounded">
+          {closeOptions.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+        </select>
+
+        <button onClick={handleSearch} className="bg-blue-600 text-white py-2 rounded" disabled={!state || !investment || !capital}>検索</button>
+      </div>
+
+      {searched && Object.keys(groupedResults).length > 0 ? (
+        <div className="grid gap-6">
+          {Object.entries(groupedResults).map(([category, minors]) => (
+            <div key={category} className="border rounded-xl p-4 shadow-md bg-white">
+              <h2 className="font-bold text-base mb-2">{category}</h2>
+              {Object.entries(minors).map(([minor, items]) => (
+                <div key={minor} className="mb-3">
+                  {minor !== '全体' && <h3 className="text-sm font-semibold mb-1">{minor}</h3>}
+                  {items[0]?.参考リンク && (
+                    <div className="text-xs text-blue-600 underline mb-1">
+                      <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>
+                    </div>
+                  )}
+                  <ul className="list-disc pl-4 space-y-1">
+                    {items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.狙い目G数 && (
+                          <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                        )}
+                        {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
+                          <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
+                        )}
+                        {[item.条件, item.条件2, item.条件3].filter(Boolean).map((c, i) => (
+                          <div key={i} className="text-xs text-gray-600">{c}</div>
+                        ))}
+                        {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : searched ? (
+        <p className="text-center text-sm text-gray-500">条件に合うデータが見つかりません。</p>
+      ) : null}
     </main>
   );
 }
