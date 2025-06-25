@@ -78,12 +78,13 @@ export default function Home() {
   const capitalOptions = ['20万円以上', '50万円以上', '100万円以上'];
   const closeOptions = ['閉店時間非考慮', '閉店3h前', '閉店2h前', '閉店1h前'];
 
+  // ① JSON ファイルのパス対応
   useEffect(() => {
     if (!machine || machine === '機種を選択') return;
     const map: { [key: string]: string } = {
       'L吉宗': 'yoshimune',
       'ミリマス': 'mirimasu',
-      'Lゴジラ': 'godzilla',
+      'Lゴジラ': 'gojira',            // ← ファイル名に合わせて修正
       'L絶対衝撃': 'zettai',
       'ULTRAMAN': 'ultraman',
       'ギルクラ2': 'guilty',
@@ -99,6 +100,7 @@ export default function Home() {
       .then(json => setData(json));
   }, [machine]);
 
+  // ② 数値変換（"NaN" 文字列対策）
   const parsePlus = (value: string | number | null | undefined) => {
     if (!value || value === '不明') return 0;
     const cleaned = value.toString().replace(/[^\d-]/g, '');
@@ -143,11 +145,12 @@ export default function Home() {
     setResults(filtered);
   };
 
+  // ③ グルーピング：中カテゴリ優先＆300枚以上/300～600枚を同一扱い
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
     const major = item.狙い分類 || 'その他';
-    const minorRaw = item.条件4 || '';
-    const minor = /前回AT300枚以下/.test(minorRaw) ? '前回AT300枚以下' :
-                  /前回AT(300枚以上|300～600枚)/.test(minorRaw) ? '前回AT300枚以上' : '';
+    const minorSource = item.中カテゴリ || item.条件4 || '';
+    const minor = minorSource.includes('前回AT300枚以下') ? '前回AT300枚以下' :
+                  (minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')) ? '前回AT300枚以上' : '';
     if (!acc[major]) acc[major] = {};
     const mid = minor || '全体';
     if (!acc[major][mid]) acc[major][mid] = [];
