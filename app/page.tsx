@@ -106,6 +106,7 @@ export default function Home() {
       '東京喰種',
       'スーパーブラックジャック',
       'Lスーパービンゴネオ',
+      'ダンベル',
       'からくりサーカス'
   ];
 
@@ -135,6 +136,7 @@ export default function Home() {
       '東京喰種': 'tokyoghoul',
       'スーパーブラックジャック': 'sbj',
       'Lスーパービンゴネオ': 'superbingo',
+      'ダンベル': 'dumbbell',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
