@@ -197,6 +197,9 @@ const parsePlus = (value: string | number | null | undefined) => {
     item.条件4 ||
     '全体';
 
+    const minorSource = item.中カテゴリ || item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
+  let minor = '';
+
     if (minorSource.includes('前回AT300枚以下')) {
       minor = '前回AT300枚以下';
     } else if (minorSource.includes('前回AT600枚以上')) {
