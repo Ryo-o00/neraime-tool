@@ -185,31 +185,18 @@ const parsePlus = (value: string | number | null | undefined) => {
 };
 
   const groupedResults = results.reduce<{
-  [major: string]: { [middle: string]: { [minor: string]: RowData[] } }
+  [major: string]: { [middle: string]: { [minor: string]: RowData[] } };
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
-  const middle = item.中カテゴリ || ''; // 空文字のまま
-  const minorSource =
-    item.小カテゴリ ||
-    item.条件 ||
-    item.条件2 ||
-    item.条件3 ||
-    item.条件4 ||
-    '';
-  let minor = '';
+  const middle = item.中カテゴリ || '';
 
-  if (minorSource.includes('前回AT300枚以下')) {
-    minor = '前回AT300枚以下';
-  } else if (minorSource.includes('前回AT600枚以上')) {
-    minor = '前回AT600枚以上';
-  } else if (
-    minorSource.includes('前回AT300枚以上') ||
-    minorSource.includes('前回AT300～600枚')
-  ) {
-    minor = '前回AT300枚以上';
-  } else {
-    minor = '全体';
-  }
+  // 小カテゴリがあればそれを使用、なければ条件系を連結して使用
+  const minor =
+    item.小カテゴリ?.trim() ||
+    [item.条件, item.条件2, item.条件3, item.条件4]
+      .filter(Boolean)
+      .join('／')
+      .trim() || '全体'; // 条件すべて空なら "全体"
 
   // 三重のオブジェクト構造作成
   if (!acc[major]) acc[major] = {};
@@ -218,7 +205,7 @@ const parsePlus = (value: string | number | null | undefined) => {
 
   acc[major][middle][minor].push(item);
   return acc;
-}, {});
+}, {});          // ← 初期値あり（第2引数）
 
   return (
   <main className="p-4 max-w-xl mx-auto text-sm">
