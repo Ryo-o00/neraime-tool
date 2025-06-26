@@ -188,20 +188,34 @@ const parsePlus = (value: string | number | null | undefined) => {
   [major: string]: { [middle: string]: { [minor: string]: RowData[] } }
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
-  const middle = item.中カテゴリ;
+  const middleRaw = item.中カテゴリ?.trim();
 
-    const minorSource = item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
+  // 中カテゴリが空ならスキップ
+  if (!middleRaw) return acc;
+
+  const middle = middleRaw;
+
+  const minorSource =
+    item.小カテゴリ ||
+    item.条件 ||
+    item.条件2 ||
+    item.条件3 ||
+    item.条件4 ||
+    '';
   let minor = '';
 
-    if (minorSource.includes('前回AT300枚以下')) {
-      minor = '前回AT300枚以下';
-    } else if (minorSource.includes('前回AT600枚以上')) {
-      minor = '前回AT600枚以上';
-    } else if (minorSource.includes('前回AT300枚以上') || minorSource.includes('前回AT300～600枚')) {
-      minor = '前回AT300枚以上';
-    }
+  if (minorSource.includes('前回AT300枚以下')) {
+    minor = '前回AT300枚以下';
+  } else if (minorSource.includes('前回AT600枚以上')) {
+    minor = '前回AT600枚以上';
+  } else if (
+    minorSource.includes('前回AT300枚以上') ||
+    minorSource.includes('前回AT300～600枚')
+  ) {
+    minor = '前回AT300枚以上';
+  }
 
-    // 三重のオブジェクト構造を作成
+  // 三重のオブジェクト構造を作成
   if (!acc[major]) acc[major] = {};
   if (!acc[major][middle]) acc[major][middle] = {};
   if (!acc[major][middle][minor]) acc[major][middle][minor] = [];
