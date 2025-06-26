@@ -188,7 +188,10 @@ const parsePlus = (value: string | number | null | undefined) => {
   [major: string]: { [middle: string]: { [minor: string]: RowData[] } }
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
-  const middle = item.中カテゴリ || 'その他';
+  const middle = item.中カテゴリ?.trim(); // 空白やnull/undefinedをそのままに
+
+  // middleが無い（空文字やnullなど）データはスキップ
+  if (!middle) return acc;
 
     const minorSource = item.中カテゴリ || item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
   let minor = '';
