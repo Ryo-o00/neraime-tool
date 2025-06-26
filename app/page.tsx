@@ -117,24 +117,24 @@ export default function Home() {
   useEffect(() => {
     if (!machine || machine === '機種を選択') return;
     const map: { [key: string]: string } = {
-      'L吉宗': 'yoshimune',
-      'ミリマス': 'mirimasu',
-      'Lゴジラ': 'gojira',
       'L絶対衝撃': 'zettai',
+      'DMC5': 'dmc5',
       'ULTRAMAN': 'ultraman',
+      'いざ番長': 'izabancho',
       'ギルクラ2': 'guilty',
       'ガンダムSEED': 'seed',
       'よう実': 'youjitsu',
-      'DMC5': 'dmc5',
-      'いざ番長': 'izabancho',
       'L緑ドン': 'midori',
-      'マギレコ': 'magireco',
-      '東京喰種': 'tokyoghoul',
+      'L吉宗': 'yoshimune',
+      'ミリマス': 'mirimasu',
       'Lうしとら': 'ushitora',
+      'Lゴジラ': 'gojira',
+      'マギレコ': 'magireco',
       'Lバイオ5': 'bio5',
+      'Lカイジ': 'kaiji',
+      '東京喰種': 'tokyoghoul',
       'スーパーブラックジャック': 'sbj',
       'Lスーパービンゴネオ': 'superbingo',
-      'Lカイジ': 'kaiji',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
