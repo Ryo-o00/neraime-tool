@@ -185,10 +185,10 @@ const parsePlus = (value: string | number | null | undefined) => {
 };
 
   const groupedResults = results.reduce<{
-  [major: string]: { [minor: string]: RowData[] }
+  [major: string]: { [middle: string]: { [minor: string]: RowData[] } }
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
-
+  const middle = item.中カテゴリ || ''; // 空文字のまま
   const minorSource =
     item.小カテゴリ ||
     item.条件 ||
@@ -196,7 +196,6 @@ const parsePlus = (value: string | number | null | undefined) => {
     item.条件3 ||
     item.条件4 ||
     '';
-
   let minor = '';
 
   if (minorSource.includes('前回AT300枚以下')) {
@@ -208,13 +207,16 @@ const parsePlus = (value: string | number | null | undefined) => {
     minorSource.includes('前回AT300～600枚')
   ) {
     minor = '前回AT300枚以上';
+  } else {
+    minor = '全体';
   }
 
-  // オブジェクト構造作成（大カテゴリ → 小カテゴリ）
+  // 三重のオブジェクト構造作成
   if (!acc[major]) acc[major] = {};
-  if (!acc[major][minor]) acc[major][minor] = [];
+  if (!acc[major][middle]) acc[major][middle] = {};
+  if (!acc[major][middle][minor]) acc[major][middle][minor] = [];
 
-  acc[major][minor].push(item);
+  acc[major][middle][minor].push(item);
   return acc;
 }, {});
 
