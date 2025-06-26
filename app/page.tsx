@@ -101,7 +101,8 @@ export default function Home() {
     'L緑ドン',
     'マギレコ',
     '東京喰種',
-    'からくりサーカス'
+    'からくりサーカス',
+    'Lうしとら'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
@@ -125,7 +126,8 @@ export default function Home() {
       'L緑ドン': 'midori',
       'マギレコ': 'magireco',
       '東京喰種': 'tokyoghoul',
-      'からくりサーカス': 'karakuri'
+      'からくりサーカス': 'karakuri',
+      'Lうしとら': 'ushitora'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
