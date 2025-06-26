@@ -188,9 +188,9 @@ const parsePlus = (value: string | number | null | undefined) => {
   [major: string]: { [middle: string]: { [minor: string]: RowData[] } }
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
-  const middle = item.中カテゴリ?.trim(); // 空白やnull/undefinedをそのままに
+  const middle = item.中カテゴリ;
 
-    const minorSource = item.中カテゴリ || item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
+    const minorSource = item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
   let minor = '';
 
     if (minorSource.includes('前回AT300枚以下')) {
