@@ -105,6 +105,7 @@ export default function Home() {
     'Lバイオ5',
     'スーパーブラックジャック',
     'Lスーパービンゴネオ',
+    'Lカイジ',
     'からくりサーカス'
   ];
 
@@ -133,6 +134,7 @@ export default function Home() {
       'Lバイオ5': 'bio5',
       'スーパーブラックジャック': 'sbj',
       'Lスーパービンゴネオ': 'superbingo',
+      'Lカイジ': 'kaiji',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
