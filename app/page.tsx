@@ -153,32 +153,40 @@ const parsePlus = (value: string | number | null | undefined) => {
     )
     .map(item => {
       const baseValue = item[`資金_${capital}`]?.toString().trim().replace(/[\s　]/g, '');
-      const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
-                      closeGap === '閉店2h前' ? item['閉店2h前加算'] :
-                      closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
+      // ❷ plusRaw 取得はそのまま
+const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
+                closeGap === '閉店2h前' ? item['閉店2h前加算'] :
+                closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
 
-      if (closeGap !== '閉店時間非考慮' && plusRaw === '不明') {
-        return {
-          ...item,
-          狙い目G数: baseValue,
-          調整後G数: '不明',
-          加算値: '不明'
-        };
-      }
+// ❸ 「不明」or「狙えない」をまとめて処理
+const isInvalid = plusRaw === '不明' || plusRaw === '狙えない';
 
-      const 加算 = closeGap === '閉店3h前' ? parsePlus(item['閉店3h前加算']) :
-                   closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
-                   closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
+if (closeGap !== '閉店時間非考慮' && isInvalid) {
+  return {
+    ...item,
+    狙い目G数: baseValue,
+    調整後G数: plusRaw,   // ← '不明' または '狙えない' をそのまま
+    加算値: plusRaw        // ← 同上
+  };
+}
 
-      const isAdjustable = /^((CZ|AT)間)?\d+(pt)?$/i.test(baseValue);
-      const 調整後G数 = (closeGap === '閉店時間非考慮' || !isAdjustable) ? undefined : adjustRange(baseValue, 加算);
+// ❹ ここから下は通常ケース（数値加算）
+const 加算 = closeGap === '閉店3h前' ? parsePlus(item['閉店3h前加算']) :
+             closeGap === '閉店2h前' ? parsePlus(item['閉店2h前加算']) :
+             closeGap === '閉店1h前' ? parsePlus(item['閉店1h前加算']) : 0;
 
-      return {
-        ...item,
-        狙い目G数: baseValue,
-        調整後G数,
-        加算値: 加算
-      };
+const isAdjustable = /^((CZ|AT)間)?\d+(pt)?$/i.test(baseValue);
+const 調整後G数 = (closeGap === '閉店時間非考慮' || !isAdjustable)
+  ? undefined
+  : adjustRange(baseValue, 加算);
+
+return {
+  ...item,
+  狙い目G数: baseValue,
+  調整後G数,
+  加算値: 加算
+};
+
     });
 
   setResults(filtered);
