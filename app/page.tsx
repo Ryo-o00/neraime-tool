@@ -1,7 +1,5 @@
 'use client';
 
-// test
-
 import { useEffect, useState } from 'react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -90,25 +88,25 @@ export default function Home() {
 
   const machineOptions = [
     '機種を選択',
-    'L吉宗',
-    'ミリマス',
-    'Lゴジラ',
     'L絶対衝撃',
-    'ULTRAMAN',
-    'ギルクラ2',
-    'ガンダムSEED',
-    'よう実',
-    'DMC5',
-    'いざ番長',
-    'L緑ドン',
-    'マギレコ',
-    '東京喰種',
-    'Lうしとら',
-    'Lバイオ5',
-    'スーパーブラックジャック',
-    'Lスーパービンゴネオ',
-    'Lカイジ',
-    'からくりサーカス'
+      'DMC5',
+      'ULTRAMAN',
+      'いざ番長',
+      'ギルクラ2',
+      'ガンダムSEED',
+      'よう実',
+      'L緑ドン',
+      'L吉宗',
+      'ミリマス',
+      'Lうしとら',
+      'Lゴジラ',
+      'マギレコ',
+      'Lバイオ5',
+      'Lカイジ',
+      '東京喰種',
+      'スーパーブラックジャック',
+      'Lスーパービンゴネオ',
+      'からくりサーカス'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
