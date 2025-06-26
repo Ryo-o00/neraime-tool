@@ -103,6 +103,7 @@ export default function Home() {
     '東京喰種',
     'Lうしとら',
     'Lバイオ5',
+    'スーパーブラックジャック',
     'からくりサーカス'
   ];
 
@@ -129,6 +130,7 @@ export default function Home() {
       '東京喰種': 'tokyoghoul',
       'Lうしとら': 'ushitora',
       'Lバイオ5': 'bio5',
+      'スーパーブラックジャック': 'SBJ',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
