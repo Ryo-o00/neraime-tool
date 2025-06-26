@@ -190,13 +190,8 @@ const parsePlus = (value: string | number | null | undefined) => {
   const major = item.大カテゴリ || 'その他';
   const middle = item.中カテゴリ || '';
 
-  // 小カテゴリがあればそれを使用、なければ条件系を連結して使用
-  const minor =
-    item.小カテゴリ?.trim() ||
-    [item.条件, item.条件2, item.条件3, item.条件4]
-      .filter(Boolean)
-      .join('／')
-      .trim() || '全体'; // 条件すべて空なら "全体"
+  // 小カテゴリがあれば使用、なければ "全体"
+  const minor = item.小カテゴリ?.trim() || '全体';
 
   // 三重のオブジェクト構造作成
   if (!acc[major]) acc[major] = {};
