@@ -13,14 +13,21 @@ type RowData = {
   調整後G数?: string;
   補足?: string;
   その他条件?: string;
-  狙い分類?: string;
+  大カテゴリ?: string;
   中カテゴリ?: string;
   小カテゴリ?: string;
-  条件?: string;
-  条件2?: string;
-  条件3?: string;
-  条件4?: string;
+  差枚?: string;
+  前回AT?: string;
+  前回当選G数?: string;
+  前回枚数?: string;
   参考リンク?: string;
+  スルー数?: string;
+  AT間G数?: string;
+  RB回数?: string;
+  CZ間G数?: string;
+  スポットライト?: string;
+  終了後ステージ?: string;
+  周期?: string;
   [key: `資金_${string}`]: string;
   [key: string]: any;
 };
@@ -185,9 +192,9 @@ const parsePlus = (value: string | number | null | undefined) => {
 };
 
   const groupedResults = results.reduce<{ [key: string]: { [key: string]: RowData[] } }>((acc, item) => {
-    const major = item.狙い分類 || 'その他';
+    const major = item.大カテゴリ || 'その他';
 
-    const minorSource = item.中カテゴリ || item.条件4 || item.条件3 || item.条件 || '';
+    const minorSource = item.中カテゴリ || item.小カテゴリ || item.差枚 || item.前回AT || item.前回当選G数 || item.前回枚数 || item.スルー数 || item.条件3 || item.AT間G数 || item.RB回数 || item.CZ間G数 || item.スポットライト || item.終了後ステージ || item.周期 || '';
     let minor = '';
 
     if (minorSource.includes('前回AT300枚以下')) {
@@ -262,7 +269,7 @@ const parsePlus = (value: string | number | null | undefined) => {
                         {item.調整後G数 && closeGap !== '閉店時間非考慮' && searched && (
                           <span className="text-orange-600 ml-2">🕒 {closeGap}：{item.調整後G数}</span>
                         )}
-                        {[item.条件, item.条件2, item.条件3, item.条件4].filter(Boolean).map((c, i) => (
+                        {[item.差枚, item.前回AT, item.前回当選G数, item.前回枚数, item.スルー数, item.AT間G数, item.RB回数, item.CZ間G数, item.スポットライト, item.終了後ステージ, item.周期].filter(Boolean).map((c, i) => (
                           <div key={i} className="text-xs text-gray-600">{c}</div>
                         ))}
                         {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
