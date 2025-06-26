@@ -189,13 +189,6 @@ const parsePlus = (value: string | number | null | undefined) => {
 }>((acc, item) => {
   const major = item.大カテゴリ || 'その他';
   const middle = item.中カテゴリ || 'その他';
-  const minor =
-    item.小カテゴリ ||
-    item.条件 ||
-    item.条件2 ||
-    item.条件3 ||
-    item.条件4 ||
-    '全体';
 
     const minorSource = item.中カテゴリ || item.小カテゴリ || item.条件 || item.条件2 || item.条件3 || item.条件4 || '';
   let minor = '';
