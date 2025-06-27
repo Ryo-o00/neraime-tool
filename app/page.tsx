@@ -108,6 +108,7 @@ export default function Home() {
       'Lスーパービンゴネオ',
       'ダンベル',
       'モンハンライズ',
+      'かぐや様',
       'からくりサーカス'
   ];
 
@@ -139,6 +140,7 @@ export default function Home() {
       'Lスーパービンゴネオ': 'superbingo',
       'ダンベル': 'dumbbell',
       'モンハンライズ': 'rise',
+      'かぐや様': 'kaguya',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
