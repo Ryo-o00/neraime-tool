@@ -107,6 +107,7 @@ export default function Home() {
       'スーパーブラックジャック',
       'Lスーパービンゴネオ',
       'ダンベル',
+      'モンハンライズ',
       'からくりサーカス'
   ];
 
@@ -137,6 +138,7 @@ export default function Home() {
       'スーパーブラックジャック': 'sbj',
       'Lスーパービンゴネオ': 'superbingo',
       'ダンベル': 'dumbbell',
+      'モンハンライズ': 'rise',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
