@@ -109,6 +109,7 @@ export default function Home() {
       'ダンベル',
       'モンハンライズ',
       'かぐや様',
+      'イーター',
       'からくりサーカス'
   ];
 
@@ -141,6 +142,7 @@ export default function Home() {
       'ダンベル': 'dumbbell',
       'モンハンライズ': 'rise',
       'かぐや様': 'kaguya',
+      'イーター': 'eater',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
