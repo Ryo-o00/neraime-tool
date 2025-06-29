@@ -113,6 +113,7 @@ export default function Home() {
       'L炎炎',
       '番長4',
       'チバリヨ2',
+      'モンキーV',
       'からくりサーカス'
   ];
 
@@ -149,6 +150,7 @@ export default function Home() {
       'L炎炎': 'enen',
       '番長4': 'bancho4',
       'チバリヨ2': 'chibariyo2',
+      'モンキーV': 'monkeyv',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
