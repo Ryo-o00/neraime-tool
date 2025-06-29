@@ -111,6 +111,7 @@ export default function Home() {
       'かぐや様',
       'イーター',
       'L炎炎',
+      '番長4',
       'からくりサーカス'
   ];
 
@@ -145,6 +146,7 @@ export default function Home() {
       'かぐや様': 'kaguya',
       'イーター': 'eater',
       'L炎炎': 'enen',
+      '番長4': 'bancho4',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
