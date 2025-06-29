@@ -112,6 +112,7 @@ export default function Home() {
       'イーター',
       'L炎炎',
       '番長4',
+      'チバリヨ2',
       'からくりサーカス'
   ];
 
@@ -147,6 +148,7 @@ export default function Home() {
       'イーター': 'eater',
       'L炎炎': 'enen',
       '番長4': 'bancho4',
+      'チバリヨ2': 'chibariyo2',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
@@ -180,8 +182,8 @@ const plusRaw = closeGap === '閉店3h前' ? item['閉店3h前加算'] :
                 closeGap === '閉店2h前' ? item['閉店2h前加算'] :
                 closeGap === '閉店1h前' ? item['閉店1h前加算'] : null;
 
-// ❸ 「不明」or「狙えない」をまとめて処理
-const isInvalid = plusRaw === '不明' || plusRaw === '狙えない';
+// ❸ 「不明」or「狙えない」or「要調整」をまとめて処理
+const isInvalid = plusRaw === '不明' || plusRaw === '狙えない' || plusRaw === '要調整';
 
 if (closeGap !== '閉店時間非考慮' && isInvalid) {
   return {
