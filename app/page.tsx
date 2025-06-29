@@ -110,6 +110,7 @@ export default function Home() {
       'モンハンライズ',
       'かぐや様',
       'イーター',
+      'L炎炎',
       'からくりサーカス'
   ];
 
@@ -143,6 +144,7 @@ export default function Home() {
       'モンハンライズ': 'rise',
       'かぐや様': 'kaguya',
       'イーター': 'eater',
+      'L炎炎': 'enen',
       'からくりサーカス': 'karakuri'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
