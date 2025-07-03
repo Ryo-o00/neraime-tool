@@ -116,7 +116,8 @@ export default function Home() {
       'モンキーV',
       '乙女4',
       'L北斗',
-      'からくりサーカス'
+      'からくりサーカス',
+      'ヴヴヴ'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
@@ -155,7 +156,8 @@ export default function Home() {
       'モンキーV': 'monkeyv',
       '乙女4': 'otome4',
       'L北斗': 'hokuto',
-      'からくりサーカス': 'karakuri'
+      'からくりサーカス': 'karakuri',
+      'ヴヴヴ': 'vvv'
     };
     fetch(`/neraime_l_${map[machine]}.json`)
       .then(res => res.json())
