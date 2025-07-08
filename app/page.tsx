@@ -88,6 +88,7 @@ export default function Home() {
 
   const machineOptions = [
     '機種を選択',
+    'わた婚',
     'L絶対衝撃',
       'DMC5',
       'ULTRAMAN',
@@ -128,6 +129,7 @@ export default function Home() {
   useEffect(() => {
     if (!machine || machine === '機種を選択') return;
     const map: { [key: string]: string } = {
+      'わた婚': 'watakon',
       'L絶対衝撃': 'zettai',
       'DMC5': 'dmc5',
       'ULTRAMAN': 'ultraman',
