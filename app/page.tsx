@@ -1,4 +1,3 @@
-// page.tsx を五十音UIから元の形（全機種プルダウン → 状態 → 投資条件）に戻したコード
 "use client";
 
 import { useEffect, useState } from 'react';
