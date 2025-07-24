@@ -1,7 +1,7 @@
-
+// 修正済みの page.tsx（Next.js 13+ app router 用）
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import data from "../public/nerai_me_list.json";
 
 export type DataItem = {
@@ -26,98 +26,73 @@ export type DataItem = {
 };
 
 export default function Home() {
-  const [machineName, setMachineName] = useState("");
-  const [state, setState] = useState("");
+  const [machine, setMachine] = useState("");
+  const [status, setStatus] = useState("");
   const [investment, setInvestment] = useState("");
   const [filteredData, setFilteredData] = useState<DataItem[]>([]);
 
-  const machineList = Array.from(new Set(data.map((item) => item["機種名"]))).sort();
-  const stateList = Array.from(new Set(data.filter(item => item["機種名"] === machineName).map(item => item["状態"])));
-  const investmentList = Array.from(new Set(data.filter(item => item["機種名"] === machineName && item["状態"] === state).map(item => item["投資条件"])));
+  const machineList = Array.from(new Set(data.map((d) => d.機種名))).sort();
+  const statusList = Array.from(new Set(data.filter(d => d.機種名 === machine).map(d => d.状態)));
+  const investmentList = Array.from(new Set(data.filter(d => d.機種名 === machine && d.状態 === status).map(d => d.投資条件)));
 
   useEffect(() => {
-    if (machineName && state && investment) {
-      const result = data.filter(
-        (item) =>
-          item["機種名"] === machineName &&
-          item["状態"] === state &&
-          item["投資条件"] === investment
+    if (machine && status && investment) {
+      const result = data.filter(d =>
+        d.機種名 === machine &&
+        d.状態 === status &&
+        d.投資条件 === investment
       );
       setFilteredData(result);
     } else {
       setFilteredData([]);
     }
-  }, [machineName, state, investment]);
+  }, [machine, status, investment]);
 
   return (
-    <main className="p-4 space-y-4 bg-gray-100 min-h-screen">
-      <div>
-        <label className="block font-bold">機種名</label>
-        <select
-          value={machineName}
-          onChange={(e) => {
-            setMachineName(e.target.value);
-            setState("");
-            setInvestment("");
-          }}
-          className="border p-1 rounded"
-        >
-          <option value="">選択してください</option>
-          {machineList.map((name) => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
-      </div>
-
-      {machineName && (
-        <div>
-          <label className="block font-bold">状態</label>
-          <select
-            value={state}
-            onChange={(e) => {
-              setState(e.target.value);
-              setInvestment("");
-            }}
-            className="border p-1 rounded"
-          >
-            <option value="">選択してください</option>
-            {stateList.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {machineName && state && (
-        <div>
-          <label className="block font-bold">投資条件</label>
-          <select
-            value={investment}
-            onChange={(e) => setInvestment(e.target.value)}
-            className="border p-1 rounded"
-          >
-            <option value="">選択してください</option>
-            {investmentList.map((inv) => (
-              <option key={inv} value={inv}>{inv}</option>
-            ))}
-          </select>
-        </div>
-      )}
+    <main className="p-4 max-w-2xl mx-auto">
+      <h1 className="text-xl font-bold text-center mb-6">狙い目早見表</h1>
 
       <div className="space-y-4">
-        {filteredData.map((item, index) => (
-          <div key={index} className="border p-2 bg-white rounded shadow-sm text-sm">
-            <p className="text-blue-700 font-bold">{item["大見出し"]} ＞ {item["中見出し"]}</p>
-            <p className="font-bold">{item["小見出し"]}</p>
-            {item["ツール"] && <a href={item["ツール"]} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>}
-            {item["PASS"] && <p className="text-gray-600">PASS：{item["PASS"]}</p>}
-            {item["PASS2"] && <p className="text-gray-600">PASS2：{item["PASS2"]}</p>}
-            <p className="text-red-600 text-base font-semibold">🎯 狙い目：{item["狙い目"]}</p>
-            {item["差枚"] && <p>差枚：{item["差枚"]}</p>}
-            {item["その他条件"] && <p>{item["その他条件"]}</p>}
-            {item["その他条件2"] && <p>{item["その他条件2"]}</p>}
-          </div>
-        ))}
+        <select className="w-full border p-2" value={machine} onChange={(e) => { setMachine(e.target.value); setStatus(""); setInvestment(""); }}>
+          <option value="">機種を選択</option>
+          {machineList.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+
+        {machine && (
+          <select className="w-full border p-2" value={status} onChange={(e) => { setStatus(e.target.value); setInvestment(""); }}>
+            <option value="">状態を選択</option>
+            {statusList.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        )}
+
+        {status && (
+          <select className="w-full border p-2" value={investment} onChange={(e) => setInvestment(e.target.value)}>
+            <option value="">投資条件を選択</option>
+            {investmentList.map((i) => <option key={i} value={i}>{i}</option>)}
+          </select>
+        )}
+      </div>
+
+      <div className="mt-6 space-y-6">
+        {filteredData.length > 0 && (
+          filteredData.reduce((acc: JSX.Element[], item, index, arr) => {
+            const showHeader = index === 0 || item.大見出し !== arr[index - 1].大見出し;
+            const showSubHeader = index === 0 || item.中見出し !== arr[index - 1].中見出し;
+            acc.push(
+              <div key={index} className="border rounded-md p-3 shadow bg-white">
+                {showHeader && <h2 className="text-lg font-bold text-gray-800 border-l-4 border-blue-500 pl-2 mb-1">{item.大見出し}</h2>}
+                {showSubHeader && <h3 className="text-base font-semibold text-gray-700 ml-2 mb-1">{item.中見出し}</h3>}
+                <p className="text-sm ml-4 font-medium">{item.小見出し}</p>
+                {item["打ち方、示唆など"] && <a href={item["打ち方、示唆など"]} target="_blank" className="text-blue-600 text-sm ml-4 underline">打ち方や各種示唆はこちら</a>}
+                <p className="ml-4">🎯 <b>狙い目：</b>{item.狙い目}</p>
+                {item.差枚 && <p className="ml-4 text-sm">差枚：{item.差枚}</p>}
+                {item.その他条件 && <p className="ml-4 text-sm">{item.その他条件}</p>}
+                {item.その他条件2 && <p className="ml-4 text-sm">{item.その他条件2}</p>}
+              </div>
+            );
+            return acc;
+          }, [])
+        )}
       </div>
     </main>
   );
