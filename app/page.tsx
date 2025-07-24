@@ -3,11 +3,32 @@
 import { useEffect, useState } from 'react';
 import data from "../public/nerai_me_list.json";
 
+type DataItem = {
+  機種名: string;
+  ID: string;
+  五十音: string;
+  状態: string;
+  投資条件: string;
+  大見出し: string;
+  中見出し: string;
+  小見出し: string;
+  差枚: string;
+  その他条件: string;
+  その他条件2: string;
+  狙い目: string;
+  補足: string;
+  ツール: string;
+  PASS: string;
+  ツール2: string;
+  PASS2: string;
+  "打ち方、示唆など": string;
+};
+
 export default function Home() {
   const [machineName, setMachineName] = useState("");
   const [state, setState] = useState("");
   const [investment, setInvestment] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState<DataItem[]>([]);
 
   const machineList = Array.from(new Set(data.map((item) => item["機種名"]))).sort();
   const stateList = Array.from(new Set(data.filter(item => item["機種名"] === machineName).map(item => item["状態"])));
