@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -22,7 +23,6 @@ export type DataItem = {
   ツール2: string;
   PASS2: string;
   "打ち方、示唆など": string;
-  "リンク"?: string;
 };
 
 export default function Home() {
@@ -50,7 +50,7 @@ export default function Home() {
   }, [machineName, state, investment]);
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="p-4 space-y-4 bg-gray-100 min-h-screen">
       <div>
         <label className="block font-bold">機種名</label>
         <select
@@ -60,7 +60,7 @@ export default function Home() {
             setState("");
             setInvestment("");
           }}
-          className="border p-1"
+          className="border p-1 rounded"
         >
           <option value="">選択してください</option>
           {machineList.map((name) => (
@@ -78,7 +78,7 @@ export default function Home() {
               setState(e.target.value);
               setInvestment("");
             }}
-            className="border p-1"
+            className="border p-1 rounded"
           >
             <option value="">選択してください</option>
             {stateList.map((s) => (
@@ -94,7 +94,7 @@ export default function Home() {
           <select
             value={investment}
             onChange={(e) => setInvestment(e.target.value)}
-            className="border p-1"
+            className="border p-1 rounded"
           >
             <option value="">選択してください</option>
             {investmentList.map((inv) => (
@@ -104,18 +104,18 @@ export default function Home() {
         </div>
       )}
 
-      <div>
+      <div className="space-y-4">
         {filteredData.map((item, index) => (
-          <div key={index} className="border p-2 my-2 bg-white rounded shadow">
-            <p className="text-blue-700 font-semibold">{item["大見出し"]} ＞ {item["中見出し"]}</p>
+          <div key={index} className="border p-2 bg-white rounded shadow-sm text-sm">
+            <p className="text-blue-700 font-bold">{item["大見出し"]} ＞ {item["中見出し"]}</p>
             <p className="font-bold">{item["小見出し"]}</p>
-            {item["リンク"] && <a href={item["リンク"]} className="text-blue-500 underline" target="_blank">ツールはこちら</a>}
-            {item["PASS"] && <p className="text-sm text-gray-600">PASS：{item["PASS"]}</p>}
-            {item["PASS2"] && <p className="text-sm text-gray-600">PASS2：{item["PASS2"]}</p>}
-            <p className="text-lg my-1">🎯 狙い目：{item["狙い目"]}</p>
-            {item["差枚"] && <p className="text-sm">差枚：{item["差枚"]}</p>}
-            {item["その他条件"] && <p className="text-sm">{item["その他条件"]}</p>}
-            {item["その他条件2"] && <p className="text-sm">{item["その他条件2"]}</p>}
+            {item["ツール"] && <a href={item["ツール"]} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">打ち方や各種示唆はこちら</a>}
+            {item["PASS"] && <p className="text-gray-600">PASS：{item["PASS"]}</p>}
+            {item["PASS2"] && <p className="text-gray-600">PASS2：{item["PASS2"]}</p>}
+            <p className="text-red-600 text-base font-semibold">🎯 狙い目：{item["狙い目"]}</p>
+            {item["差枚"] && <p>差枚：{item["差枚"]}</p>}
+            {item["その他条件"] && <p>{item["その他条件"]}</p>}
+            {item["その他条件2"] && <p>{item["その他条件2"]}</p>}
           </div>
         ))}
       </div>
