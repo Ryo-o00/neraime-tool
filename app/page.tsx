@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import data from "../public/nerai_me_list.json";
 
-type DataItem = {
+export type DataItem = {
   機種名: string;
   ID: string;
   五十音: string;
@@ -15,13 +15,14 @@ type DataItem = {
   差枚: string;
   その他条件: string;
   その他条件2: string;
-  狙い目: string;
+  狙い目: string | number;
   補足: string;
   ツール: string;
   PASS: string;
   ツール2: string;
   PASS2: string;
   "打ち方、示唆など": string;
+  "リンク"?: string;
 };
 
 export default function Home() {
