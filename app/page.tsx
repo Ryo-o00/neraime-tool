@@ -1,4 +1,6 @@
 // 修正済みの page.tsx（Next.js 13+ app router 用）
+import React from "react";
+
 "use client";
 
 import { useEffect, useState } from "react";
