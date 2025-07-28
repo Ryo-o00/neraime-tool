@@ -155,6 +155,8 @@ export default function Home() {
                     <div key={minor} className="mb-3 ml-4">
                       {minor !== '全体' && <h4 className="text-sm font-bold mb-1">{minor}</h4>}
 
+                      
+
                       <ul className="list-disc pl-5 space-y-1">
                         {items.map((item, idx) => (
                           <li key={idx}>
@@ -168,6 +170,24 @@ export default function Home() {
                                 <div key={i} className="text-xs text-gray-600">{c}</div>
                               ))}
                             {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
+
+{item.ツール && (
+  <div className="text-xs text-blue-600 underline">
+    <a href={item.ツール} target="_blank" rel="noopener noreferrer">
+      ツールはこちら
+    </a>
+    {item.PASS && <span className="ml-2 text-gray-700">（PASS: {item.PASS}）</span>}
+  </div>
+)}
+
+{item.ツール2 && (
+  <div className="text-xs text-blue-600 underline mt-1">
+    <a href={item.ツール2} target="_blank" rel="noopener noreferrer">
+      ツール2はこちら
+    </a>
+    {item.PASS2 && <span className="ml-2 text-gray-700">（PASS2: {item.PASS2}）</span>}
+  </div>
+)}
                           </li>
                         ))}
                       </ul>
