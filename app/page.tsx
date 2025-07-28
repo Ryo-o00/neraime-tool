@@ -88,7 +88,7 @@ export default function Home() {
   const groupedResults = results.reduce<{
     [major: string]: { [middle: string]: { [minor: string]: RowData[] } };
   }>((acc, item) => {
-    const major = item.大見出し || 'その他';
+    const major = item.大見出し || '';
     const middle = item.中見出し || '';
     const minor = item.小見出し || '全体';
 
