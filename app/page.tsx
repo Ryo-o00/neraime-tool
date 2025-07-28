@@ -172,7 +172,7 @@ export default function Home() {
                               ))}
 
 {item.差枚 && (
-  <div key={i} className="text-xs text-gray-600">
+  <div className="text-xs text-gray-600">
     差枚：{item.差枚}
   </div>
 )}
