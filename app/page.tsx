@@ -165,11 +165,19 @@ export default function Home() {
   <span className="text-red-600 font-semibold">🎯 {item.狙い目}</span>
 )}
 
-                            {[item.差枚,　item.その他条件, item.その他条件2]
+                            {[item.その他条件, item.その他条件2]
                               .filter(Boolean)
                               .map((c, i) => (
                                 <div key={i} className="text-xs text-gray-600">{c}</div>
                               ))}
+
+{item.差枚 && (
+  <div key={i} className="text-xs text-gray-600">
+    差枚：{item.差枚}
+  </div>
+)}
+
+
                             {item.補足 && <div className="text-xs text-gray-600">補足：{item.補足}</div>}
 
 {item.ツール && (
