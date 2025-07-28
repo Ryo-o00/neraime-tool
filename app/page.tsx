@@ -29,8 +29,8 @@ export default function Home() {
   const [investment, setInvestment] = useState('');
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
+  const [howToUrl, setHowToUrl] = useState<string | null>(null);
 
-  // ★機種一覧は JSON に含まれる機種を手動で追加
   const machineOptions = [
     '機種を選択',
     '沖ドキ！GOLD',
@@ -39,21 +39,9 @@ export default function Home() {
     'モンキーターンV',
     'ゴッドイーター',
     'かぐや様は告らせたい',
-    'モンスターハンターライズ',
-    'スーパーブラックジャック',
-    'L東京喰種',
-    'Lバイオ5',
-    'マギアレコード',
-    '機動戦士ガンダムSEED',
-    '緑ドンVIVA！情熱南米編REVIVAL',
-    'ようこそ実力至上主義の教室へ',
-    'L吉宗',
-    'いざ！番長',
-    'デビルメイクライ5',
-    'ギルティクラウン2',
+    'スマスロコードギアス',
     'ULTRAMAN',
-    'わたしの幸せな結婚'
-    // ← 必要に応じて追加
+    'Lゴジラ'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
@@ -65,13 +53,21 @@ export default function Home() {
       .then(json => setData(json));
   }, []);
 
+  useEffect(() => {
+    if (machine && data.length > 0) {
+      const match = data.find(item => item.機種名 === machine && item['打ち方、示唆など']);
+      setHowToUrl(match?.['打ち方、示唆など'] || null);
+    } else {
+      setHowToUrl(null);
+    }
+  }, [machine, data]);
+
   const handleSearch = () => {
-    const filtered = data
-      .filter(item =>
-        item.機種名 === machine &&
-        item.状態?.includes(state) &&
-        item.投資条件 === investment
-      );
+    const filtered = data.filter(item =>
+      item.機種名 === machine &&
+      item.状態?.includes(state) &&
+      item.投資条件 === investment
+    );
 
     setResults(filtered);
     setSearched(true);
@@ -102,6 +98,14 @@ export default function Home() {
             <option key={idx} value={opt === '機種を選択' ? '' : opt}>{opt}</option>
           ))}
         </select>
+
+        {howToUrl && (
+          <div className="text-sm text-blue-600 underline text-center mb-1">
+            <a href={howToUrl} target="_blank" rel="noopener noreferrer">
+              打ち方や各種示唆はこちら
+            </a>
+          </div>
+        )}
 
         <select value={state} onChange={(e) => setState(e.target.value)} className="border p-2 rounded">
           <option value="">状態を選択</option>
