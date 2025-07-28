@@ -155,14 +155,6 @@ export default function Home() {
                     <div key={minor} className="mb-3 ml-4">
                       {minor !== '全体' && <h4 className="text-sm font-bold mb-1">{minor}</h4>}
 
-                      {items[0]?.['打ち方、示唆など'] && (
-                        <div className="text-xs text-blue-600 underline mb-1">
-                          <a href={items[0]['打ち方、示唆など']} target="_blank" rel="noopener noreferrer">
-                            打ち方や各種示唆はこちら
-                          </a>
-                        </div>
-                      )}
-
                       <ul className="list-disc pl-5 space-y-1">
                         {items.map((item, idx) => (
                           <li key={idx}>
