@@ -166,9 +166,10 @@ export default function Home() {
                       <ul className="list-disc pl-5 space-y-1">
                         {items.map((item, idx) => (
                           <li key={idx}>
-                            {item.狙い目 && (
-                              <span className="text-red-600 font-semibold">🎯 {item.狙い目}</span>
-                            )}
+{item.狙い目 != null && (
+  <span className="text-red-600 font-semibold">🎯 {item.狙い目}</span>
+)}
+
                             {[item.その他条件, item.その他条件2]
                               .filter(Boolean)
                               .map((c, i) => (
