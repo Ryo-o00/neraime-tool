@@ -30,6 +30,7 @@ export default function Home() {
   const [results, setResults] = useState<RowData[]>([]);
   const [searched, setSearched] = useState(false);
 
+  // ★機種一覧は JSON に含まれる機種を手動で追加
   const machineOptions = [
     '機種を選択',
     '沖ドキ！GOLD',
@@ -37,8 +38,11 @@ export default function Home() {
     'L北斗の拳',
     'モンキーターンV',
     'ゴッドイーター',
-    'かぐや様は告らせたい'
-    // 必要に応じて追加
+    'かぐや様は告らせたい',
+    'スマスロコードギアス',
+    'ULTRAMAN',
+    'Lゴジラ'
+    // ← 必要に応じて追加
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
@@ -139,7 +143,7 @@ export default function Home() {
                             {item.狙い目 && (
                               <span className="text-red-600 font-semibold">🎯 {item.狙い目}</span>
                             )}
-                            {[item.条件, item.条件2, item.条件3, item.条件4]
+                            {[item.その他条件, item.その他条件2]
                               .filter(Boolean)
                               .map((c, i) => (
                                 <div key={i} className="text-xs text-gray-600">{c}</div>
