@@ -11,10 +11,6 @@ type RowData = {
   小見出し?: string;
   狙い目?: string | number;
   補足?: string;
-  条件?: string;
-  条件2?: string;
-  条件3?: string;
-  条件4?: string;
   差枚?: string;
   その他条件?: string;
   その他条件2?: string;
@@ -49,7 +45,7 @@ export default function Home() {
   const investmentOptions = ['メダル無限', '46-52/メダル460枚', '46-52/現金投資'];
 
   useEffect(() => {
-    fetch('/neraime_all.json')
+    fetch('/neraime_list.json')
       .then(res => res.json())
       .then(json => setData(json));
   }, []);
