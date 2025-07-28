@@ -2,23 +2,27 @@
 
 import { useEffect, useState } from 'react';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 type RowData = {
+  機種名: string;
   状態: string;
-  投資区分: string;
-  台番: string;
-  狙い目G数?: string;
+  投資条件: string;
+  大見出し?: string;
+  中見出し?: string;
+  小見出し?: string;
+  狙い目?: string | number;
   補足?: string;
-  その他条件?: string;
-  大カテゴリ?: string;
-  中カテゴリ?: string;
-  小カテゴリ?: string;
   条件?: string;
   条件2?: string;
   条件3?: string;
   条件4?: string;
-  参考リンク?: string;
+  差枚?: string;
+  その他条件?: string;
+  その他条件2?: string;
+  ツール?: string;
+  PASS?: string;
+  ツール2?: string;
+  PASS2?: string;
+  ['打ち方、示唆など']?: string;
   [key: string]: any;
 };
 
@@ -32,106 +36,48 @@ export default function Home() {
 
   const machineOptions = [
     '機種を選択',
-    'わた婚',
-    'L絶対衝撃',
-    'DMC5',
-    'ULTRAMAN',
-    'いざ番長',
-    'ギルクラ2',
-    'ガンダムSEED',
-    'よう実',
-    'L緑ドン',
-    'L吉宗',
-    'ミリマス',
-    'Lうしとら',
-    'Lゴジラ',
-    'マギレコ',
-    'Lバイオ5',
-    'Lカイジ',
-    '東京喰種',
-    'スーパーブラックジャック',
-    'Lスーパービンゴネオ',
-    'ダンベル',
-    'モンハンライズ',
-    'かぐや様',
-    'イーター',
-    'L炎炎',
-    '番長4',
-    'チバリヨ2',
-    'モンキーV',
-    '乙女4',
-    'L北斗',
+    '沖ドキ！GOLD',
     'からくりサーカス',
-    'ヴヴヴ'
+    'L北斗の拳',
+    'モンキーターンV',
+    'ゴッドイーター',
+    'かぐや様は告らせたい'
+    // 必要に応じて追加
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
-  const investmentOptions = ['再プレイ', '46-52/460枚', '46-52/現金'];
+  const investmentOptions = ['メダル無限', '46-52/メダル460枚', '46-52/現金投資'];
 
   useEffect(() => {
-    if (!machine || machine === '機種を選択') return;
-    const map: { [key: string]: string } = {
-      'わた婚': 'watakon',
-      'L絶対衝撃': 'zettai',
-      'DMC5': 'dmc5',
-      'ULTRAMAN': 'ultraman',
-      'いざ番長': 'izabancho',
-      'ギルクラ2': 'guilty',
-      'ガンダムSEED': 'seed',
-      'よう実': 'youjitsu',
-      'L緑ドン': 'midori',
-      'L吉宗': 'yoshimune',
-      'ミリマス': 'mirimasu',
-      'Lうしとら': 'ushitora',
-      'Lゴジラ': 'gojira',
-      'マギレコ': 'magireco',
-      'Lバイオ5': 'bio5',
-      'Lカイジ': 'kaiji',
-      '東京喰種': 'tokyoghoul',
-      'スーパーブラックジャック': 'sbj',
-      'Lスーパービンゴネオ': 'superbingo',
-      'ダンベル': 'dumbbell',
-      'モンハンライズ': 'rise',
-      'かぐや様': 'kaguya',
-      'イーター': 'eater',
-      'L炎炎': 'enen',
-      '番長4': 'bancho4',
-      'チバリヨ2': 'chibariyo2',
-      'モンキーV': 'monkeyv',
-      '乙女4': 'otome4',
-      'L北斗': 'hokuto',
-      'からくりサーカス': 'karakuri',
-      'ヴヴヴ': 'vvv'
-    };
-    fetch(`/neraime_l_${map[machine]}.json`)
+    fetch('/neraime_all.json')
       .then(res => res.json())
       .then(json => setData(json));
-  }, [machine]);
+  }, []);
 
   const handleSearch = () => {
-    setSearched(true);
     const filtered = data
       .filter(item =>
+        item.機種名 === machine &&
         item.状態?.includes(state) &&
-        item.投資区分.replace('46/52', '46-52') === investment
-      )
-      .map(item => ({
-        ...item,
-        狙い目G数: item.狙い目G数 || ''
-      }));
+        item.投資条件 === investment
+      );
+
     setResults(filtered);
+    setSearched(true);
   };
 
   const groupedResults = results.reduce<{
     [major: string]: { [middle: string]: { [minor: string]: RowData[] } };
   }>((acc, item) => {
-    const major = item.大カテゴリ || 'その他';
-    const middle = item.中カテゴリ || '';
-    const minor = item.小カテゴリ?.trim() || '全体';
+    const major = item.大見出し || 'その他';
+    const middle = item.中見出し || '';
+    const minor = item.小見出し || '全体';
+
     if (!acc[major]) acc[major] = {};
     if (!acc[major][middle]) acc[major][middle] = {};
     if (!acc[major][middle][minor]) acc[major][middle][minor] = [];
     acc[major][middle][minor].push(item);
+
     return acc;
   }, {});
 
@@ -154,13 +100,17 @@ export default function Home() {
         </select>
 
         <select value={investment} onChange={(e) => setInvestment(e.target.value)} className="border p-2 rounded">
-          <option value="">投資区分を選択</option>
+          <option value="">投資条件を選択</option>
           {investmentOptions.map((opt, idx) => (
             <option key={idx} value={opt}>{opt}</option>
           ))}
         </select>
 
-        <button onClick={handleSearch} className="bg-blue-600 text-white py-2 rounded" disabled={!state || !investment}>
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white py-2 rounded"
+          disabled={!state || !investment || !machine}
+        >
           検索
         </button>
       </div>
@@ -179,9 +129,9 @@ export default function Home() {
                     <div key={minor} className="mb-3 ml-4">
                       {minor !== '全体' && <h4 className="text-sm font-bold mb-1">{minor}</h4>}
 
-                      {items[0]?.参考リンク && (
+                      {items[0]?.['打ち方、示唆など'] && (
                         <div className="text-xs text-blue-600 underline mb-1">
-                          <a href={items[0].参考リンク} target="_blank" rel="noopener noreferrer">
+                          <a href={items[0]['打ち方、示唆など']} target="_blank" rel="noopener noreferrer">
                             打ち方や各種示唆はこちら
                           </a>
                         </div>
@@ -190,8 +140,8 @@ export default function Home() {
                       <ul className="list-disc pl-5 space-y-1">
                         {items.map((item, idx) => (
                           <li key={idx}>
-                            {item.狙い目G数 && (
-                              <span className="text-red-600 font-semibold">🎯 {item.狙い目G数}</span>
+                            {item.狙い目 && (
+                              <span className="text-red-600 font-semibold">🎯 {item.狙い目}</span>
                             )}
                             {[item.条件, item.条件2, item.条件3, item.条件4]
                               .filter(Boolean)
