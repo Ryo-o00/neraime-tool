@@ -34,6 +34,7 @@ export default function Home() {
   const machineOptions = [
     '機種を選択',
     '沖ドキ！GOLD',
+    '甲鉄城のカバネリ',
     'からくりサーカス',
     'L北斗の拳',
     'モンキーターンV',
