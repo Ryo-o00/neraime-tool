@@ -58,7 +58,8 @@ export default function Home() {
     'わたしの幸せな結婚',
     '咲-Saki-頂上決戦',
     '転生したら剣でした',
-    'アズールレーン'
+    'アズールレーン',
+    'ダーリン・イン・ザ・フランキス'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
