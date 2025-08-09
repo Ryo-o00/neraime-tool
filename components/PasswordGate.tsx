@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-const PASS_HASH_HEX = process.env.NEXT_PUBLIC_PASS_HASH ?? "";
-const TOKEN_KEY = "slottool-auth-v1";
+// ← ここで環境変数を正規化（改行・前後空白を除去）
+const PASS_HASH_HEX = (process.env.NEXT_PUBLIC_PASS_HASH ?? "").trim();
+const TOKEN_KEY = "slottool-auth-v1"; // 全員再ログインさせたい時は v2 などに変更
 
 async function sha256Hex(text: string) {
   const buf = new TextEncoder().encode(text);
@@ -13,28 +14,36 @@ async function sha256Hex(text: string) {
     .join("");
 }
 
+// 入力も正規化（全角→半角、前後空白除去）
+function sanitize(s: string) {
+  return s.normalize("NFKC").trim();
+}
+
 export default function PasswordGate({ children }: { children: React.ReactNode }) {
   const [ok, setOk] = useState<boolean | null>(null);
   const [input, setInput] = useState("");
 
-  // 診断ログ
-  useEffect(() => {
-    console.log("🔍 PASS_HASH_HEX (from env) =", PASS_HASH_HEX);
-  }, []);
-
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
     setOk(token === "1");
+    // 診断ログ（必要なときだけ見てください）
+    console.log("PASS_HASH_HEX (from env) =", PASS_HASH_HEX);
   }, []);
 
   const onSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    const hex = await sha256Hex(input);
-    console.log("🔍 YOUR_INPUT_HEX =", hex);
+    const norm = sanitize(input);
+    const hex = await sha256Hex(norm);
+
+    // 診断ログ
+    console.log("YOUR_INPUT_HEX =", hex);
+
     if (hex === PASS_HASH_HEX) {
       sessionStorage.setItem(TOKEN_KEY, "1");
       setOk(true);
     } else {
+      // さらに堅牢に：長さも念のため表示（64でないと改行混入の可能性大）
+      console.log("LEN input=", hex.length, "LEN env=", PASS_HASH_HEX.length);
       alert("パスワードが違います");
     }
   };
@@ -43,7 +52,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
 
   if (!ok) {
     return (
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: 20 }}>
         <h2>パスワードを入力してください</h2>
         <form onSubmit={onSubmit}>
           <input
@@ -53,7 +62,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
             placeholder="Password"
             autoFocus
           />
-          <button type="submit">入室</button>
+          <button type="submit" style={{ marginLeft: 12 }}>入室</button>
         </form>
       </div>
     );
