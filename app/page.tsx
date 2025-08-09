@@ -55,7 +55,8 @@ export default function Home() {
     'デビルメイクライ5',
     'ギルティクラウン2',
     'ULTRAMAN',
-    'わたしの幸せな結婚'
+    'わたしの幸せな結婚',
+    '咲-Saki-頂上決戦'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
