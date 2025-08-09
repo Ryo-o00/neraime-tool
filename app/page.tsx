@@ -57,7 +57,8 @@ export default function Home() {
     'ULTRAMAN',
     'わたしの幸せな結婚',
     '咲-Saki-頂上決戦',
-    '転生したら剣でした'
+    '転生したら剣でした',
+    'アズールレーン'
   ];
 
   const stateOptions = ['リセ後', 'AT後'];
