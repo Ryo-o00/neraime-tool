@@ -17,6 +17,11 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
   const [ok, setOk] = useState<boolean | null>(null);
   const [input, setInput] = useState("");
 
+  // 診断ログ
+  useEffect(() => {
+    console.log("🔍 PASS_HASH_HEX (from env) =", PASS_HASH_HEX);
+  }, []);
+
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
     setOk(token === "1");
@@ -25,6 +30,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
   const onSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     const hex = await sha256Hex(input);
+    console.log("🔍 YOUR_INPUT_HEX =", hex);
     if (hex === PASS_HASH_HEX) {
       sessionStorage.setItem(TOKEN_KEY, "1");
       setOk(true);
